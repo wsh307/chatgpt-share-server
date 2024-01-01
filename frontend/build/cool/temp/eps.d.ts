@@ -722,6 +722,120 @@ declare namespace Eps {
 		request: Service["request"];
 	}
 
+	interface ChatgptSession {
+		/**
+		 * add
+		 */
+		add(data?: any): Promise<any>;
+		/**
+		 * delete
+		 */
+		delete(data?: any): Promise<any>;
+		/**
+		 * info
+		 */
+		info(data?: any): Promise<any>;
+		/**
+		 * list
+		 */
+		list(data?: any): Promise<any[]>;
+		/**
+		 * page
+		 */
+		page(data?: any): Promise<{
+			pagination: { size: number; page: number; total: number };
+			list: any[];
+			[key: string]: any;
+		}>;
+		/**
+		 * update
+		 */
+		update(data?: any): Promise<any>;
+		/**
+		 * 权限标识
+		 */
+		permission: {
+			add: string;
+			delete: string;
+			info: string;
+			list: string;
+			page: string;
+			update: string;
+		};
+		/**
+		 * 权限状态
+		 */
+		_permission: {
+			add: boolean;
+			delete: boolean;
+			info: boolean;
+			list: boolean;
+			page: boolean;
+			update: boolean;
+		};
+		/**
+		 * 请求
+		 */
+		request: Service["request"];
+	}
+
+	interface ChatgptUser {
+		/**
+		 * add
+		 */
+		add(data?: any): Promise<any>;
+		/**
+		 * delete
+		 */
+		delete(data?: any): Promise<any>;
+		/**
+		 * info
+		 */
+		info(data?: any): Promise<any>;
+		/**
+		 * list
+		 */
+		list(data?: any): Promise<any[]>;
+		/**
+		 * page
+		 */
+		page(data?: any): Promise<{
+			pagination: { size: number; page: number; total: number };
+			list: any[];
+			[key: string]: any;
+		}>;
+		/**
+		 * update
+		 */
+		update(data?: any): Promise<any>;
+		/**
+		 * 权限标识
+		 */
+		permission: {
+			add: string;
+			delete: string;
+			info: string;
+			list: string;
+			page: string;
+			update: string;
+		};
+		/**
+		 * 权限状态
+		 */
+		_permission: {
+			add: boolean;
+			delete: boolean;
+			info: boolean;
+			list: boolean;
+			page: boolean;
+			update: boolean;
+		};
+		/**
+		 * 请求
+		 */
+		request: Service["request"];
+	}
+
 	interface DictInfo {
 		/**
 		 * add
@@ -1060,6 +1174,7 @@ declare namespace Eps {
 				user: BaseSysUser;
 			};
 		};
+		chatgpt: { session: ChatgptSession; user: ChatgptUser };
 		dict: { info: DictInfo; type: DictType };
 		space: { info: SpaceInfo; type: SpaceType };
 		task: { info: TaskInfo };

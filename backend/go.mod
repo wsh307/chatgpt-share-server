@@ -10,6 +10,7 @@ require (
 	github.com/cool-team-official/cool-admin-go/modules/dict v1.5.5
 	github.com/cool-team-official/cool-admin-go/modules/space v1.5.5
 	github.com/cool-team-official/cool-admin-go/modules/task v1.5.5
+	github.com/gogf/gf v1.16.9
 	github.com/gogf/gf/contrib/nosql/redis/v2 v2.6.1
 	github.com/gogf/gf/v2 v2.6.1
 )
@@ -28,7 +29,6 @@ require (
 	github.com/go-logr/logr v1.4.1 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/go-sql-driver/mysql v1.7.1 // indirect
-	github.com/gogf/gf v1.16.9 // indirect
 	github.com/gogf/gf/contrib/drivers/mysql/v2 v2.6.1 // indirect
 	github.com/golang-jwt/jwt/v4 v4.5.0 // indirect
 	github.com/google/uuid v1.5.0 // indirect

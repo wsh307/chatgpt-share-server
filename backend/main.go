@@ -8,6 +8,7 @@ import (
 	_ "github.com/gogf/gf/contrib/nosql/redis/v2"
 
 	_ "backend/modules"
+	_ "backend/openai"
 
 	"github.com/gogf/gf/v2/os/gctx"
 
