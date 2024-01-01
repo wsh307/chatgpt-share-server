@@ -1,6 +1,7 @@
 package config
 
 import (
+	"github.com/gogf/gf/util/gconv"
 	"github.com/gogf/gf/v2/encoding/gjson"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/os/gctx"
@@ -10,6 +11,7 @@ import (
 )
 
 var (
+	PORT         = 8001
 	CHATPROXY    = "http://demo.xyhelper.cn"
 	AUTHKEY      = "xyhelper"
 	ArkoseUrl    = "https://tcr9i.closeai.biz/v2/"
@@ -26,6 +28,7 @@ var (
 	window.__PK35="{{.PK35}}";
 	</script>
 	`
+	OauthUrl = ""
 )
 
 func init() {
@@ -59,6 +62,22 @@ func init() {
 		BuildId = build
 	}
 	g.Log().Info(ctx, "BuildId:", BuildId)
+	port := g.Cfg().MustGetWithEnv(ctx, "PORT").Int()
+	if port != 0 {
+		PORT = port
+	}
+	g.Log().Info(ctx, "PORT:", PORT)
+	s := g.Server()
+	s.SetPort(PORT)
+	s.SetServerRoot("resource/public")
+
+	oauthUrl := g.Cfg().MustGetWithEnv(ctx, "OAUTH_URL").String()
+	if oauthUrl != "" {
+		OauthUrl = oauthUrl
+	} else {
+		OauthUrl = "http://127.0.0.1:" + gconv.String(PORT) + "/auth/oauth"
+	}
+	g.Log().Info(ctx, "OAUTH_URL:", OauthUrl)
 }
 
 func GetEnvScript(ctx g.Ctx) string {

@@ -22,5 +22,7 @@ func init() {
 	// auth路由组
 	authGroup := s.Group("/auth")
 	authGroup.GET("/login", auth.Login)
+	authGroup.POST("/login", auth.Login)
+	authGroup.POST("/oauth", auth.Oauth)
 
 }
