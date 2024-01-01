@@ -37,7 +37,7 @@ if [ "$REMOTE_CONTAINERS" = "true" ]; then
     go install github.com/cool-team-official/cool-admin-go/cool-tools@latest
     # 安装gf
     echo "Installing gf use mirror ..."
-    git wget -O gf \
+    wget -O gf \
         https://github.com/gogf/gf/releases/latest/download/gf_$(go env GOOS)_$(go env GOARCH) &&
         chmod +x gf &&
         ./gf install -y &&
