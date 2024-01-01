@@ -20,7 +20,7 @@ const { browser } = useBrowser();
 const { app } = useBase();
 
 function toHome() {
-	location.href = "https://cool-js.com";
+	location.href = "";
 }
 </script>
 
