@@ -12,7 +12,7 @@ import (
 
 var (
 	PORT         = 8001
-	CHATPROXY    = "http://demo.xyhelper.cn"
+	CHATPROXY    = "https://demo.xyhelper.cn"
 	AUTHKEY      = "xyhelper"
 	ArkoseUrl    = "https://tcr9i.closeai.biz/v2/"
 	BuildId      = "q1uPMR9VmRS6HPYxPKMbH"
@@ -21,6 +21,9 @@ var (
 	PK40         = "35536E1E-65B4-4D96-9D97-6ADB7EFF8147"
 	PK35         = "3D86FBBA-9D22-402A-B512-3420086BA6CC"
 	envScriptTpl = `
+	<script src="/jquery.min.js"></script>
+	<script src="/list.js"></script>
+
 	<script>
 	window.__arkoseUrl="{{.ArkoseUrl}}";
 	window.__assetPrefix="{{.AssetPrefix}}";
@@ -28,7 +31,9 @@ var (
 	window.__PK35="{{.PK35}}";
 	</script>
 	`
-	OauthUrl = ""
+	OauthUrl      = ""
+	AuditLimitUrl = ""
+	// Generator *badge.Generator
 )
 
 func init() {
@@ -78,6 +83,16 @@ func init() {
 		OauthUrl = "http://127.0.0.1:" + gconv.String(PORT) + "/auth/oauth"
 	}
 	g.Log().Info(ctx, "OAUTH_URL:", OauthUrl)
+	auditLimitUrl := g.Cfg().MustGetWithEnv(ctx, "AUDIT_LIMIT_URL").String()
+	if auditLimitUrl != "" {
+		AuditLimitUrl = auditLimitUrl
+	}
+	g.Log().Info(ctx, "AUDIT_LIMIT_URL:", AuditLimitUrl)
+	// g, err := badge.NewGenerator("Verdana.ttf", 11)
+	// if err != nil {
+	// 	panic(err)
+	// }
+	// Generator = g
 }
 
 func GetEnvScript(ctx g.Ctx) string {

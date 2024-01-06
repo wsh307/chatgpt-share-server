@@ -1,7 +1,10 @@
 package openai
 
 import (
-	"backend/openai/auth"
+	_ "backend/openai/api"
+	_ "backend/openai/auth"
+	_ "backend/openai/backend-api"
+	_ "backend/openai/next"
 
 	"github.com/gogf/gf/v2/frame/g"
 )
@@ -19,10 +22,9 @@ func init() {
 	group.GET("/g/:gizmoId/c/:convId", GC)
 	group.GET(("/gpts/mine"), Mine)
 
-	// auth路由组
-	authGroup := s.Group("/auth")
-	authGroup.GET("/login", auth.Login)
-	authGroup.POST("/login", auth.Login)
-	authGroup.POST("/oauth", auth.Oauth)
+	// 状态相关
+	group.GET("/status", Status)
+	group.GET("/endpoint", EndPoint)
+	group.POST("/carpage", CarPage)
 
 }

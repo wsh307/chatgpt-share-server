@@ -8,10 +8,12 @@ import (
 )
 
 type CarInfo struct {
-	Carid     string
-	Email     string
-	IsPlus    bool
-	IsPlusStr string
+	Carid         string
+	Email         string
+	IsPlus        bool
+	IsPlusStr     string
+	RefreshCookie string
+	AccessToken   string
 }
 
 func CheckCar(ctx g.Ctx, carid string) (carInfo *CarInfo, err error) {
@@ -28,6 +30,18 @@ func CheckCar(ctx g.Ctx, carid string) (carInfo *CarInfo, err error) {
 		return
 	}
 	carInfo.Email = email
+	refreshCookie := sessionJson.Get("refreshCookie").String()
+	if refreshCookie == "" {
+		err = gerror.New("refreshCookie is empty")
+		return
+	}
+	carInfo.RefreshCookie = refreshCookie
+	accessToken := sessionJson.Get("accessToken").String()
+	if accessToken == "" {
+		err = gerror.New("accessToken is empty")
+		return
+	}
+	carInfo.AccessToken = accessToken
 	models := sessionJson.Get("models").Array()
 	if len(models) == 0 {
 		err = gerror.New("models is empty")

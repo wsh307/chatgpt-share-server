@@ -80,6 +80,6 @@ func (s *ChatgptSessionService) ModifyAfter(ctx g.Ctx, method string, param map[
 		g.Log().Error(ctx, "ChatgptSessionService.ModifyAfter", "update session error", err)
 		return
 	}
-	cool.CacheManager.Set(ctx, "session:"+gconv.String(param["carID"]), sessionJson.String(), 10*24*time.Hour)
+	cool.CacheManager.Set(ctx, "session:"+gconv.String(param["carID"]), sessionJson.String(), 90*24*time.Hour)
 	return
 }

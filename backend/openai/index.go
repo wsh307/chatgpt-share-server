@@ -11,7 +11,7 @@ import (
 func Index(r *ghttp.Request) {
 
 	ctx := r.GetCtx()
-	if r.Session.MustGet("offical-session").IsEmpty() {
+	if r.Session.MustGet("usertoken").IsEmpty() {
 		r.Session.RemoveAll()
 		r.Response.RedirectTo("/auth/login")
 		// r.Response.Writer.Write([]byte("Hello XyHelper"))
@@ -60,7 +60,7 @@ func Index(r *ghttp.Request) {
 	if model != "" {
 		propsJson.Set("query.model", model)
 	}
-	propsJson.Set("buildId", config.CacheBuildId)
+	propsJson.Set("buildId", config.BuildId)
 	propsJson.Set("assetPrefix", config.AssetPrefix)
 
 	r.Response.WriteTpl(config.CacheBuildId+"/chat.html", g.Map{
@@ -72,9 +72,9 @@ func Index(r *ghttp.Request) {
 }
 func C(r *ghttp.Request) {
 	ctx := r.GetCtx()
-	if r.Session.MustGet("offical-session").IsEmpty() {
+	if r.Session.MustGet("usertoken").IsEmpty() {
 		r.Session.RemoveAll()
-		r.Response.RedirectTo("/login")
+		r.Response.RedirectTo("/auth/login")
 		return
 	}
 	convId := r.GetRouter("convId").String()
@@ -117,7 +117,7 @@ func C(r *ghttp.Request) {
 
 	propsJson := gjson.New(props)
 	propsJson.Set("query.default.1", convId)
-	propsJson.Set("buildId", config.CacheBuildId)
+	propsJson.Set("buildId", config.BuildId)
 	propsJson.Set("assetPrefix", config.AssetPrefix)
 
 	r.Response.WriteTpl(config.CacheBuildId+"/chat.html", g.Map{
@@ -131,9 +131,9 @@ func C(r *ghttp.Request) {
 // Discovery 发现
 func Discovery(r *ghttp.Request) {
 
-	if r.Session.MustGet("offical-session").IsEmpty() {
+	if r.Session.MustGet("usertoken").IsEmpty() {
 		r.Session.RemoveAll()
-		r.Response.RedirectTo("/login")
+		r.Response.RedirectTo("/auth/login")
 		return
 	}
 	props := `
@@ -171,7 +171,7 @@ func Discovery(r *ghttp.Request) {
   }
   `
 	propsJson := gjson.New(props)
-	propsJson.Set("buildId", config.CacheBuildId)
+	propsJson.Set("buildId", config.BuildId)
 
 	r.Response.WriteTpl(config.CacheBuildId+"/discovery.html", g.Map{
 		"arkoseUrl":   config.ArkoseUrl,
@@ -184,9 +184,9 @@ func Discovery(r *ghttp.Request) {
 // Editor 编辑器
 func Editor(r *ghttp.Request) {
 
-	if r.Session.MustGet("offical-session").IsEmpty() {
+	if r.Session.MustGet("usertoken").IsEmpty() {
 		r.Session.RemoveAll()
-		r.Response.RedirectTo("/login")
+		r.Response.RedirectTo("/auth/login")
 		return
 	}
 
@@ -225,7 +225,7 @@ func Editor(r *ghttp.Request) {
   }
   `
 	propsJson := gjson.New(props)
-	propsJson.Set("buildId", config.CacheBuildId)
+	propsJson.Set("buildId", config.BuildId)
 	propsJson.Set("assetPrefix", config.AssetPrefix)
 
 	// if slug != "" {
@@ -245,9 +245,9 @@ func Editor(r *ghttp.Request) {
 // Slug 编辑器
 func Slug(r *ghttp.Request) {
 
-	if r.Session.MustGet("offical-session").IsEmpty() {
+	if r.Session.MustGet("usertoken").IsEmpty() {
 		r.Session.RemoveAll()
-		r.Response.RedirectTo("/login")
+		r.Response.RedirectTo("/auth/login")
 		return
 	}
 	slug := r.GetRouter("slug").String()
@@ -289,7 +289,7 @@ func Slug(r *ghttp.Request) {
 	propsJson := gjson.New(props)
 
 	propsJson.Set("query.slug", slug)
-	propsJson.Set("buildId", config.CacheBuildId)
+	propsJson.Set("buildId", config.BuildId)
 	propsJson.Set("assetPrefix", config.AssetPrefix)
 
 	r.Response.WriteTpl(config.CacheBuildId+"/slug.html", g.Map{
@@ -303,9 +303,9 @@ func Slug(r *ghttp.Request) {
 // G 游戏
 func G(r *ghttp.Request) {
 
-	if r.Session.MustGet("offical-session").IsEmpty() {
+	if r.Session.MustGet("usertoken").IsEmpty() {
 		r.Session.RemoveAll()
-		r.Response.RedirectTo("/login")
+		r.Response.RedirectTo("/auth/login")
 		return
 	}
 	gizmoId := r.GetRouter("gizmoId").String()
@@ -347,7 +347,7 @@ func G(r *ghttp.Request) {
   `
 	propsJson := gjson.New(props)
 	propsJson.Set("query.gizmoId", gizmoId)
-	propsJson.Set("buildId", config.CacheBuildId)
+	propsJson.Set("buildId", config.BuildId)
 	propsJson.Set("assetPrefix", config.AssetPrefix)
 
 	r.Response.WriteTpl(config.CacheBuildId+"/g.html", g.Map{
@@ -361,9 +361,9 @@ func G(r *ghttp.Request) {
 // GC 游戏会话
 func GC(r *ghttp.Request) {
 
-	if r.Session.MustGet("offical-session").IsEmpty() {
+	if r.Session.MustGet("usertoken").IsEmpty() {
 		r.Session.RemoveAll()
-		r.Response.RedirectTo("/login")
+		r.Response.RedirectTo("/auth/login")
 		return
 	}
 	gizmoId := r.GetRouter("gizmoId").String()
@@ -409,7 +409,7 @@ func GC(r *ghttp.Request) {
 	propsJson := gjson.New(props)
 	propsJson.Set("query.gizmoId", gizmoId)
 	propsJson.Set("query.convId", convId)
-	propsJson.Set("buildId", config.CacheBuildId)
+	propsJson.Set("buildId", config.BuildId)
 
 	r.Response.WriteTpl(config.CacheBuildId+"/gc.html", g.Map{
 		"arkoseUrl":   config.ArkoseUrl,
@@ -421,9 +421,9 @@ func GC(r *ghttp.Request) {
 
 // Mine 我的
 func Mine(r *ghttp.Request) {
-	if r.Session.MustGet("offical-session").IsEmpty() {
+	if r.Session.MustGet("usertoken").IsEmpty() {
 		r.Session.RemoveAll()
-		r.Response.RedirectTo("/login")
+		r.Response.RedirectTo("/auth/login")
 		return
 	}
 	props := `
@@ -464,7 +464,7 @@ func Mine(r *ghttp.Request) {
     "scriptLoader": []
 }`
 	propsJson := gjson.New(props)
-	propsJson.Set("buildId", config.CacheBuildId)
+	propsJson.Set("buildId", config.BuildId)
 	propsJson.Set("assetPrefix", config.AssetPrefix)
 
 	r.Response.WriteTpl(config.CacheBuildId+"/mine.html", g.Map{

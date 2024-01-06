@@ -4,6 +4,8 @@ import (
 	"backend/config"
 	"backend/utility"
 
+	"github.com/cool-team-official/cool-admin-go/cool"
+	"github.com/gogf/gf/util/gconv"
 	"github.com/gogf/gf/v2/encoding/gjson"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/net/ghttp"
@@ -17,14 +19,14 @@ func Login(r *ghttp.Request) {
 		req := r.GetMapStrStr()
 
 		carid := req["carid"]
-		if carid == "" {
-			r.Response.WriteTpl("login.html")
-			return
-		}
+		// if carid == "" {
+		// 	r.Response.WriteTpl("login.html")
+		// 	return
+		// }
 		carInfo, err := utility.CheckCar(ctx, carid)
 		if err != nil {
 			g.Log().Error(ctx, err)
-			badge, err := badge.RenderBytes("😭", "      翻车|不可用", "red")
+			badge, err := badge.RenderBytes("😭", "      翻车|不可用", "grey")
 			if err != nil {
 				g.Log().Error(ctx, err)
 				r.Response.WriteTpl("login.html")
@@ -34,14 +36,27 @@ func Login(r *ghttp.Request) {
 			return
 		}
 
-		badge, err := badge.RenderBytes(carInfo.IsPlusStr, "    😊空闲|推荐", "green")
+		badgeSVG, err := badge.RenderBytes(carInfo.IsPlusStr, "    😊空闲|推荐", "green")
+		count := utility.GetStatsInstance(carid).GetCallCount()
+		expTime := cool.CacheManager.MustGetExpire(ctx, "clears_in:"+carid)
+		expInt := gconv.Int(expTime.Seconds())
+		if expInt > 0 {
+			badgeSVG, err = badge.RenderBytes(carInfo.IsPlusStr, "            😡停运｜将于"+gconv.String(expInt)+"秒后恢复", "red")
+		} else {
+			if count > 20 {
+				badgeSVG, err = badge.RenderBytes(carInfo.IsPlusStr, "    😅繁忙|可用", "yellow")
+			} else {
+				badgeSVG, err = badge.RenderBytes(carInfo.IsPlusStr, "    😊空闲|推荐", "green")
+			}
+		}
+
 		if err != nil {
 			g.Log().Error(ctx, err)
 			r.Response.WriteTpl("login.html")
 		}
 		// fmt.Printf("%s", badge)
 
-		r.Response.WriteTpl("login.html", g.Map{"badge": string(badge)})
+		r.Response.WriteTpl("login.html", g.Map{"badge": string(badgeSVG)})
 		return
 	} else {
 		req := r.GetMapStrStr()
@@ -56,6 +71,10 @@ func Login(r *ghttp.Request) {
 				"carid": req["carid"],
 			})
 			return
+		} else {
+			r.Session.Set("usertoken", req["usertoken"])
+			r.Session.Set("carid", req["carid"])
+			r.Response.RedirectTo("/")
 		}
 	}
 }

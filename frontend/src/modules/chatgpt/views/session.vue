@@ -85,7 +85,7 @@ const Upsert = useUpsert({
 	onOpened(data) {
 		// 自动生成uuid 作为userToken
 		if (!data.carID) {
-			data.carID = uuidv4();
+			data.carID = Math.random().toString(36).substring(2, 10);
 		}
 		localStorage.removeItem("arkoseToken");
 		window.myEnforcement.run();
