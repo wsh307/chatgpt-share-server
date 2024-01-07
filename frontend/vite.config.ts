@@ -49,6 +49,7 @@ export default (): UserConfig => {
 			}
 		},
 		build: {
+			outDir: "../backend/resource/public/xyhelper",
 			minify: "terser",
 			terserOptions: {
 				compress: {
