@@ -10,3 +10,7 @@
 ```bash
 curl -sSfL https://raw.githubusercontent.com/xyhelper/chatgpt-share-server/deploy/quick-install.sh | bash
 ```
+
+## 文档(施工中)
+
+[https://chatgpt-share-server.xyhelper.cn](https://chatgpt-share-server.xyhelper.cn)
