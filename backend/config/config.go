@@ -1,13 +1,13 @@
 package config
 
 import (
-	"github.com/gogf/gf/util/gconv"
 	"github.com/gogf/gf/v2/encoding/gjson"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/os/gctx"
 	"github.com/gogf/gf/v2/os/gfile"
 	"github.com/gogf/gf/v2/os/gview"
 	"github.com/gogf/gf/v2/text/gstr"
+	"github.com/gogf/gf/v2/util/gconv"
 )
 
 var (
@@ -33,6 +33,7 @@ var (
 	`
 	OauthUrl      = ""
 	AuditLimitUrl = ""
+	APIAUTH       = ""
 	// Generator *badge.Generator
 )
 
@@ -88,11 +89,11 @@ func init() {
 		AuditLimitUrl = auditLimitUrl
 	}
 	g.Log().Info(ctx, "AUDIT_LIMIT_URL:", AuditLimitUrl)
-	// g, err := badge.NewGenerator("Verdana.ttf", 11)
-	// if err != nil {
-	// 	panic(err)
-	// }
-	// Generator = g
+	apiAuth := g.Cfg().MustGetWithEnv(ctx, "APIAUTH").String()
+	if apiAuth != "" {
+		APIAUTH = apiAuth
+	}
+	g.Log().Info(ctx, "APIAUTH:", APIAUTH)
 }
 
 func GetEnvScript(ctx g.Ctx) string {

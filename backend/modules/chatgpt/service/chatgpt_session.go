@@ -6,8 +6,8 @@ import (
 	"time"
 
 	"github.com/cool-team-official/cool-admin-go/cool"
-	"github.com/gogf/gf/errors/gerror"
 	"github.com/gogf/gf/v2/encoding/gjson"
+	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/util/gconv"
 )
@@ -35,6 +35,23 @@ func NewChatgptSessionService() *ChatgptSessionService {
 			},
 		},
 	}
+}
+
+// ModifyBefore 新增/删除/修改之前的操作
+func (s *ChatgptSessionService) ModifyBefore(ctx g.Ctx, method string, param map[string]interface{}) (err error) {
+	if method == "Delete" {
+		ids := gjson.New(param["ids"]).Array()
+		for _, id := range ids {
+			record, err := cool.DBM(s.Model).Where("id=?", id).One()
+			if err != nil {
+				g.Log().Error(ctx, "ChatgptSessionService.ModifyBefore", "get record error", err)
+				continue
+			}
+			carid := record["carID"].String()
+			cool.CacheManager.Remove(ctx, "session:"+carid)
+		}
+	}
+	return
 }
 
 // ModifyAfter 新增/删除/修改之后的操作

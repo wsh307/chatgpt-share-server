@@ -13,7 +13,7 @@ func Index(r *ghttp.Request) {
 	ctx := r.GetCtx()
 	if r.Session.MustGet("usertoken").IsEmpty() {
 		r.Session.RemoveAll()
-		r.Response.RedirectTo("/auth/login")
+		r.Response.RedirectTo("/list")
 		// r.Response.Writer.Write([]byte("Hello XyHelper"))
 		return
 	}
@@ -74,7 +74,7 @@ func C(r *ghttp.Request) {
 	ctx := r.GetCtx()
 	if r.Session.MustGet("usertoken").IsEmpty() {
 		r.Session.RemoveAll()
-		r.Response.RedirectTo("/auth/login")
+		r.Response.RedirectTo("/list")
 		return
 	}
 	convId := r.GetRouter("convId").String()
@@ -133,7 +133,7 @@ func Discovery(r *ghttp.Request) {
 
 	if r.Session.MustGet("usertoken").IsEmpty() {
 		r.Session.RemoveAll()
-		r.Response.RedirectTo("/auth/login")
+		r.Response.RedirectTo("/list")
 		return
 	}
 	props := `
@@ -186,7 +186,7 @@ func Editor(r *ghttp.Request) {
 
 	if r.Session.MustGet("usertoken").IsEmpty() {
 		r.Session.RemoveAll()
-		r.Response.RedirectTo("/auth/login")
+		r.Response.RedirectTo("/list")
 		return
 	}
 
@@ -247,7 +247,7 @@ func Slug(r *ghttp.Request) {
 
 	if r.Session.MustGet("usertoken").IsEmpty() {
 		r.Session.RemoveAll()
-		r.Response.RedirectTo("/auth/login")
+		r.Response.RedirectTo("/list")
 		return
 	}
 	slug := r.GetRouter("slug").String()
@@ -305,7 +305,7 @@ func G(r *ghttp.Request) {
 
 	if r.Session.MustGet("usertoken").IsEmpty() {
 		r.Session.RemoveAll()
-		r.Response.RedirectTo("/auth/login")
+		r.Response.RedirectTo("/list")
 		return
 	}
 	gizmoId := r.GetRouter("gizmoId").String()
@@ -363,7 +363,7 @@ func GC(r *ghttp.Request) {
 
 	if r.Session.MustGet("usertoken").IsEmpty() {
 		r.Session.RemoveAll()
-		r.Response.RedirectTo("/auth/login")
+		r.Response.RedirectTo("/list")
 		return
 	}
 	gizmoId := r.GetRouter("gizmoId").String()
@@ -423,7 +423,7 @@ func GC(r *ghttp.Request) {
 func Mine(r *ghttp.Request) {
 	if r.Session.MustGet("usertoken").IsEmpty() {
 		r.Session.RemoveAll()
-		r.Response.RedirectTo("/auth/login")
+		r.Response.RedirectTo("/list")
 		return
 	}
 	props := `

@@ -22,10 +22,10 @@ fi
 
 # 备份所有库
 cd $BASE_DIR/.devcontainer
-docker compose exec mysql sh -c 'exec mysqldump --all-databases -uroot -p"$MYSQL_ROOT_PASSWORD"' >$BACKUP_DIR/all-$BACKUPTIME.sql
+# docker compose exec mysql sh -c 'exec mysqldump --all-databases -uroot -p"$MYSQL_ROOT_PASSWORD"' >$BACKUP_DIR/all-$BACKUPTIME.sql
 
 # 只备份cool数据库
-# docker compose exec mysql sh -c 'exec mysqldump cool -uroot -p"$MYSQL_ROOT_PASSWORD"' >$BACKUP_DIR/cool-$BACKUPTIME.sql
+docker compose exec mysql sh -c 'exec mysqldump cool -uroot -p"$MYSQL_ROOT_PASSWORD"' >$BACKUP_DIR/cool-$BACKUPTIME.sql
 
 # 删除7天前的备份文件
 # find $BACKUP_DIR -mtime +7 -name "*.sql" -exec rm {} \; 

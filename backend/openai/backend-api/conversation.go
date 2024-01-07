@@ -102,7 +102,6 @@ func ConversationPATCH(r *ghttp.Request) {
 // Conversation 会话
 func Conversation(r *ghttp.Request) {
 	ctx := r.Context()
-	g.Log().Info(ctx, "Conversation")
 	// 获取header中的token
 	usertoken := r.Session.MustGet("usertoken").String()
 	if usertoken == "" {
@@ -194,6 +193,5 @@ func Conversation(r *ghttp.Request) {
 	// g.Dump(newreq.Header)
 	newreq.Header.Set("authkey", config.AUTHKEY)
 	newreq.Header.Set("Authorization", "Bearer "+AccessToken)
-	g.Dump(newreq.Header)
 	proxy.ServeHTTP(r.Response.Writer.RawWriter(), newreq)
 }

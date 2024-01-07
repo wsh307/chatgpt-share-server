@@ -5,7 +5,7 @@ import (
 	"backend/utility"
 	"net/http"
 
-	"github.com/gogf/gf/encoding/gjson"
+	"github.com/gogf/gf/v2/encoding/gjson"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/net/ghttp"
 )

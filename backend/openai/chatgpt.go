@@ -27,4 +27,7 @@ func init() {
 	group.GET("/endpoint", EndPoint)
 	group.POST("/carpage", CarPage)
 
+	// 列表
+	// group.GET("/list", List)
+
 }
