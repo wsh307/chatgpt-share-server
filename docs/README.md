@@ -1,11 +1,12 @@
 ---
 home: true
+heroImage: /images/chat.png
 actions:
   - text: 安装指南
     link: /install/
     type: primary
-  - text: 项目简介
-    link: /guide/
+  - text: 界面预览
+    link: /preview/
     type: secondary
 features:
   - title: 仿官网UI
