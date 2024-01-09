@@ -4,6 +4,7 @@ import (
 	"backend/config"
 	"backend/modules/chatgpt/model"
 	"backend/utility"
+	"bytes"
 	"io"
 	"net/http"
 	"net/http/httputil"
@@ -14,6 +15,7 @@ import (
 	"github.com/gogf/gf/v2/encoding/gjson"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/net/ghttp"
+	"github.com/gogf/gf/v2/util/gconv"
 )
 
 // 修改对话标题
@@ -154,6 +156,10 @@ func Conversation(r *ghttp.Request) {
 			r.Response.WriteJson(gjson.New(res.ReadAllString()))
 			return
 		}
+		// 重设body大小
+		r.ContentLength = int64(len(gconv.Bytes(body)))
+		// 重设body内容
+		r.Request.Body = io.NopCloser(bytes.NewReader(gconv.Bytes(body)))
 	}
 	AccessToken := carinfo.AccessToken
 	u, _ := url.Parse(config.CHATPROXY)

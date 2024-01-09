@@ -10,30 +10,12 @@ import (
 	"github.com/gogf/gf/v2/encoding/gjson"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/net/ghttp"
-	"github.com/gogf/gf/v2/os/gtime"
-	"github.com/gogf/gf/v2/util/gconv"
 )
 
 func Session(r *ghttp.Request) {
 	ctx := r.GetCtx()
 	usertoken := r.Session.MustGet("usertoken").String()
-	record, err := cool.DBM(model.NewChatgptUser()).Where("usertoken", usertoken).Where("expireTime>?", gconv.Time(gtime.Now())).One()
-	if err != nil {
-		g.Log().Error(ctx, err)
-		r.Response.WriteJson(g.Map{
-			"code": 0,
-			"msg":  "服务器错误",
-		})
-		return
-	}
-	if record == nil {
-		r.Session.RemoveAll()
-		r.Response.WriteJson(g.Map{
-			"code": 0,
-			"msg":  "用户不存在或已过期",
-		})
-		return
-	}
+
 	carid := r.Session.MustGet("carid").String()
 	carinfo, err := utility.CheckCar(ctx, carid)
 	if err != nil {

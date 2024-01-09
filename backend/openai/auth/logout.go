@@ -7,5 +7,5 @@ import (
 func Logout(r *ghttp.Request) {
 	// 退出登录
 	r.Session.RemoveAll()
-	r.Response.RedirectBack()
+	r.Response.RedirectTo("/list")
 }
