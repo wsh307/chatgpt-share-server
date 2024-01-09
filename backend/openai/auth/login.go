@@ -19,7 +19,6 @@ func Login(r *ghttp.Request) {
 		req := r.GetMapStrStr()
 
 		carid := req["carid"]
-		// if carid == "" {
 		// 	r.Response.WriteTpl("login.html")
 		// 	return
 		// }
@@ -35,8 +34,8 @@ func Login(r *ghttp.Request) {
 
 			return
 		}
+		var badgeSVG []byte
 
-		badgeSVG, err := badge.RenderBytes(carInfo.IsPlusStr, "    😊空闲|推荐", "green")
 		count := utility.GetStatsInstance(carid).GetCallCount()
 		expTime := cool.CacheManager.MustGetExpire(ctx, "clears_in:"+carid)
 		expInt := gconv.Int(expTime.Seconds())
@@ -69,6 +68,47 @@ func Login(r *ghttp.Request) {
 			r.Response.WriteTpl("login.html", g.Map{
 				"error": msg,
 				"carid": req["carid"],
+			})
+			return
+		} else {
+			r.Session.Set("usertoken", req["usertoken"])
+			r.Session.Set("carid", req["carid"])
+			r.Response.RedirectTo("/")
+		}
+	}
+}
+
+func LoginToken(r *ghttp.Request) {
+	ctx := r.GetCtx()
+	req := r.GetMapStrStr()
+	resptype := req["resptype"]
+
+	loginVar := g.Client().PostVar(ctx, config.OauthUrl, req)
+	loginJson := gjson.New(loginVar)
+	// loginJson.Dump()
+	code := loginJson.Get("code").Int()
+	if code != 1 {
+		msg := loginJson.Get("msg").String()
+		if resptype == "json" {
+			r.Response.WriteJson(g.Map{
+				"code": 0,
+				"msg":  msg,
+			})
+			return
+		} else {
+			r.Response.WriteTpl("login.html", g.Map{
+				"error": msg,
+				"carid": req["carid"],
+			})
+			return
+		}
+	} else {
+		r.Session.Set("usertoken", req["usertoken"])
+		r.Session.Set("carid", req["carid"])
+		if resptype == "json" {
+			r.Response.WriteJson(g.Map{
+				"code": 1,
+				"msg":  "登录成功",
 			})
 			return
 		} else {
