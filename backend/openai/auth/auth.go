@@ -10,5 +10,5 @@ func init() {
 	authGroup.POST("/login", Login)
 	authGroup.POST("/oauth", Oauth)
 	authGroup.GET("/logout", Logout)
-	authGroup.GET("/logintoken", LoginToken)
+	authGroup.ALL("/logintoken", LoginToken)
 }
