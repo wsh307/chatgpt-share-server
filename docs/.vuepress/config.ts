@@ -8,5 +8,21 @@ export default defineUserConfig({
     repo: "xyhelper/chatgpt-share-server",
     docsBranch: "master",
     docsDir: "docs",
+    navbar: [
+      {
+        text: "安装",
+        link: "/install/",
+      },
+      {
+        text: "配置",
+        link: "/config/",
+      },
+    ],
+    sidebar: {
+      '/config/': [
+        '/config/README.md',
+        '/config/list.md',
+      ],
+    },
   })
 });
