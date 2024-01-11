@@ -13,6 +13,8 @@ type ChatgptConversations struct {
 	ConvId    string `gorm:"column:convid;type:varchar(255);not null;index;comment:会话id" json:"convId"`          // 会话id
 	Title     string `gorm:"column:title;type:text;index,priority:1,not null;comment:会话标题" json:"title"`         // 会话标题
 	Email     string `gorm:"column:email;type:varchar(255);not null;index;comment:官网账号邮箱" json:"email"`          // 邮箱
+	// ChatGPT-Account-ID
+	ChatGPTAccountID string `gorm:"column:chatgptaccountid;type:varchar(255);comment:ChatGPT-Account-ID" json:"chatGPTAccountID"`
 }
 
 // TableName ChatgptConversations's table name

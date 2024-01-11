@@ -44,8 +44,9 @@ func Conversations(r *ghttp.Request) {
 		offset := r.Get("offset").Int()
 		limit := r.Get("limit").Int()
 		items, total, err := cool.DBM(model.NewChatgptConversations()).Where(g.Map{
-			"usertoken": usertoken,
-			"email":     carinfo.Email,
+			"usertoken":        usertoken,
+			"email":            carinfo.Email,
+			"chatgptaccountid": r.Header.Get("ChatGPT-Account-ID"),
 		}).OrderDesc("updateTime").Limit(limit).Offset(offset).AllAndCount(true)
 		if err != nil {
 			g.Log().Error(ctx, err)
@@ -89,8 +90,9 @@ func Conversations(r *ghttp.Request) {
 	// 清除所有会话
 	if method == "PATCH" {
 		cool.DBM(model.NewChatgptConversations()).Where(g.Map{
-			"usertoken": usertoken,
-			"email":     carinfo.Email,
+			"usertoken":        usertoken,
+			"email":            carinfo.Email,
+			"chatgptaccountid": r.Header.Get("ChatGPT-Account-ID"),
 		}).Delete()
 		r.Response.WriteJson(g.Map{
 			"success": true,

@@ -5,6 +5,7 @@ import (
 	_ "backend/openai/auth"
 	_ "backend/openai/backend-api"
 	_ "backend/openai/next"
+	_ "backend/openai/public-api"
 
 	"github.com/gogf/gf/v2/frame/g"
 )
@@ -20,7 +21,7 @@ func init() {
 	group.GET("/gpts/editor", Editor)
 	group.GET("/gpts/editor/:slug", Slug)
 	group.GET("/g/:gizmoId/c/:convId", GC)
-	group.GET(("/gpts/mine"), Mine)
+	group.GET("/gpts/mine", Mine)
 
 	// 状态相关
 	group.GET("/status", Status)

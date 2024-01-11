@@ -45,8 +45,9 @@ func GenTitle(r *ghttp.Request) {
 	id := r.GetRouter("id").String()
 	originUrl := config.CHATPROXY + "/backend-api/conversation/gen_title/" + id
 	resp, err := g.Client().SetAgent(r.Header.Get("User-Agent")).SetHeaderMap(g.MapStrStr{
-		"Authorization": "Bearer " + AccessToken,
-		"Content-Type":  "application/json",
+		"Authorization":      "Bearer " + AccessToken,
+		"Content-Type":       "application/json",
+		"ChatGPT-Account-ID": r.Header.Get("ChatGPT-Account-ID"),
 	}).Post(ctx, originUrl, g.MapStrStr{
 		"message_id": message_id,
 	})
@@ -69,10 +70,11 @@ func GenTitle(r *ghttp.Request) {
 	title := respJson.Get("title").String()
 	if title != "" {
 		cool.DBM(model.NewChatgptConversations()).Save(g.Map{
-			"convid":    id,
-			"title":     title,
-			"usertoken": usertoken,
-			"email":     carinfo.Email,
+			"convid":           id,
+			"title":            title,
+			"usertoken":        usertoken,
+			"email":            carinfo.Email,
+			"chatgptaccountid": r.Header.Get("ChatGPT-Account-ID"),
 		})
 	}
 	r.Response.WriteJsonExit(respBody)

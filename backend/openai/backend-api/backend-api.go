@@ -23,6 +23,7 @@ func init() {
 	backendApiGroup.ALL("/accounts/data_export", Error404)     // 导出数据
 	backendApiGroup.ALL("/user_system_messages", Error404)     // 系统消息
 	backendApiGroup.ALL("/payments/checkout", Error404)        // 支付
+	backendApiGroup.ALL("/accounts/*/invites", Error404)       // 邀请
 }
 
 func Error404(r *ghttp.Request) {
