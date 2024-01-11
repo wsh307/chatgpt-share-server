@@ -181,6 +181,59 @@ func Discovery(r *ghttp.Request) {
 	})
 }
 
+// Gpts
+func Gpts(r *ghttp.Request) {
+
+	if r.Session.MustGet("usertoken").IsEmpty() {
+		r.Session.RemoveAll()
+		r.Response.RedirectTo("/list")
+		return
+	}
+	props := `
+  {
+    "props": {
+      "pageProps": {
+        "user": {
+          "id": "user-xyhelper",
+          "name": "admin@openai.com",
+          "email": "admin@openai.com",
+          "image": "/avatars.png",
+          "picture": "/avatars.png",
+          "idp": "auth0",
+          "iat": 2699699364,
+          "mfa": false,
+          "groups": []
+        },
+        "serviceStatus": {},
+        "userCountry": "US",
+        "serviceAnnouncement": { "public": {}, "paid": {} },
+        "serverPrimedAllowBrowserStorageValue": true,
+        "canManageBrowserStorage": false,
+        "ageVerificationDeadline": null,
+        "showCookieConsentBanner": false
+      },
+      "__N_SSP": true
+    },
+    "page": "/gpts",
+    "query": {},
+    "buildId": "wtXFegAXt6bfbujLr1e7S",
+    "assetPrefix": "",
+    "isFallback": false,
+    "gssp": true,
+    "scriptLoader": []
+  }
+  `
+	propsJson := gjson.New(props)
+	propsJson.Set("buildId", config.BuildId)
+
+	r.Response.WriteTpl(config.CacheBuildId+"/gpts.html", g.Map{
+		"arkoseUrl":   config.ArkoseUrl,
+		"props":       propsJson,
+		"assetPrefix": config.AssetPrefix,
+		"envScript":   config.GetEnvScript(r.GetCtx()),
+	})
+}
+
 // Editor 编辑器
 func Editor(r *ghttp.Request) {
 

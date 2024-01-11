@@ -22,6 +22,7 @@ func init() {
 	group.GET("/gpts/editor/:slug", Slug)
 	group.GET("/g/:gizmoId/c/:convId", GC)
 	group.GET("/gpts/mine", Mine)
+	group.GET("/gpts", Gpts)
 
 	// 状态相关
 	group.GET("/status", Status)
