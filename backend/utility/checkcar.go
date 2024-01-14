@@ -17,11 +17,13 @@ type CarInfo struct {
 }
 
 func CheckCar(ctx g.Ctx, carid string) (carInfo *CarInfo, err error) {
+	// g.Log().Info(ctx, "check carid:", carid)
 	sessionVar, err := cool.CacheManager.Get(ctx, "session:"+carid)
 	if err != nil {
 		return
 	}
 	sessionJson := gjson.New(sessionVar)
+	// sessionJson.Dump()
 	carInfo = &CarInfo{}
 	carInfo.Carid = carid
 	email := sessionJson.Get("user.email").String()
