@@ -116,7 +116,7 @@ const Table = useTable({
 		{ label: "邮箱", prop: "email" },
 		{ label: "密码", prop: "password" },
 		{ label: "状态", prop: "status", component: { name: "cl-switch" } },
-		{ label: "PLUS", prop: "isPlus" },
+		{ label: "PLUS", prop: "isPlus", component: { name: "cl-switch" } },
 		{ label: "session", prop: "officialSession", showOverflowTooltip: true },
 		{ label: "备注", prop: "remark", showOverflowTooltip: true },
 		{ type: "op", buttons: ["edit", "delete"] }
