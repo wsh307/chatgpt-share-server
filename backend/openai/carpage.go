@@ -4,8 +4,10 @@ import (
 	"backend/modules/chatgpt/model"
 
 	"github.com/cool-team-official/cool-admin-go/cool"
+	baseservice "github.com/cool-team-official/cool-admin-go/modules/base/service"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/net/ghttp"
+	"github.com/gogf/gf/v2/text/gstr"
 )
 
 // 分页返回车辆列表
@@ -33,6 +35,10 @@ func CarPage(r *ghttp.Request) {
 		})
 		return
 	}
+	notice := baseservice.NewBaseSysParamService().HtmlByKey("notice")
+	// 去除 <html><body> </body></html>
+	notice = gstr.Replace(notice, "<html><body>", "", -1)
+	notice = gstr.Replace(notice, "</body></html>", "", -1)
 	r.Response.WriteJson(g.Map{
 		"code":     1000,
 		"messages": "success",
@@ -44,5 +50,6 @@ func CarPage(r *ghttp.Request) {
 				"total": count,
 			},
 		},
+		"notice": notice,
 	})
 }
