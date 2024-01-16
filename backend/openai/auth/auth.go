@@ -9,6 +9,7 @@ func init() {
 	authGroup.GET("/login", Login)
 	authGroup.POST("/login", Login)
 	authGroup.POST("/oauth", Oauth)
+	authGroup.POST("/oauthfree", OauthFree)
 	authGroup.GET("/logout", Logout)
 	authGroup.ALL("/logintoken", LoginToken)
 }

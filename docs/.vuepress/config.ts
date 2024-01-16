@@ -9,6 +9,7 @@ export default defineUserConfig({
     docsBranch: "master",
     docsDir: "docs",
     navbar: [
+      { text: "首页", link: "/" },
       {
         text: "安装",
         link: "/install/",
@@ -19,10 +20,12 @@ export default defineUserConfig({
       },
     ],
     sidebar: {
-      '/config/': [
-        '/config/README.md',
-        '/config/list.md',
+      "/config/": [
+        "/config/README.md",
+        "/config/list.md",
+        "/config/apiauth.md",
+        "/config/freemode.md",
       ],
     },
-  })
+  }),
 });

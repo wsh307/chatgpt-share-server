@@ -65,3 +65,5 @@ modules:
 CHATPROXY: "https://demo.xyhelper.cn"
 # 接入网关的authkey
 AUTHKEY: "xyhelper"
+# 免费模式下的oauth地址
+OAUTH_URL: "http://127.0.0.1:8001/auth/oauthfree"

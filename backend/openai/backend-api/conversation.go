@@ -142,6 +142,7 @@ func Conversation(r *ghttp.Request) {
 			"Cookie":        r.Header.Get("Cookie"),
 			"Referer":       r.Header.Get("Referer"),
 			"User-Agent":    r.Header.Get("User-Agent"),
+			"Carid":         carid,
 		}).Post(ctx, config.AuditLimitUrl, body)
 		if err != nil {
 			r.Response.Status = 400

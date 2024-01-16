@@ -8,6 +8,7 @@ import (
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/net/ghttp"
 	"github.com/gogf/gf/v2/os/gtime"
+	"github.com/gogf/gf/v2/text/gregex"
 	"github.com/gogf/gf/v2/util/gconv"
 )
 
@@ -67,5 +68,40 @@ func Oauth(r *ghttp.Request) {
 			return
 		}
 	}
+
+}
+
+
+// OauthFree 免费登陆接口演示
+func OauthFree(r *ghttp.Request) {
+	ctx := r.GetCtx()
+	usertoken := r.Get("usertoken").String()
+	// 检查usertoken是否6-18位字母数字组合
+
+	carid := r.Get("carid").String()
+
+	//
+	_, err := utility.CheckCar(ctx, carid)
+	if err != nil {
+		g.Log().Error(ctx, err)
+		r.Response.WriteJson(g.Map{
+			"code": 0,
+			"msg":  "服务器错误",
+		})
+		return
+	}
+	if !gregex.IsMatchString(`^[a-zA-Z0-9]{6,18}$`, usertoken) {
+		r.Response.WriteJson(g.Map{
+			"code": 0,
+			"msg":  "请输入6-18位字母数字组合",
+		})
+		return
+	}
+
+	r.Response.WriteJson(g.Map{
+		"code": 1,
+		"msg":  "登陆成功",
+	})
+	return
 
 }
