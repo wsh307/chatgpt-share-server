@@ -39,6 +39,10 @@ func CarPage(r *ghttp.Request) {
 	// 去除 <html><body> </body></html>
 	notice = gstr.Replace(notice, "<html><body>", "", -1)
 	notice = gstr.Replace(notice, "</body></html>", "", -1)
+	// 如果 notice 为 keyName notfound
+	if notice == "keyName notfound" {
+		notice = "暂无公告"
+	}
 	r.Response.WriteJson(g.Map{
 		"code":     1000,
 		"messages": "success",

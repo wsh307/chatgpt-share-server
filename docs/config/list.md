@@ -2,13 +2,13 @@
 
 选车页面(list)是一个列表页面,用于在用户登陆前以及登陆后选车使用。
 
-默认集成的选车页面源码在github上的地址为: [https://github.com/Hanwencc/car-list](https://github.com/Hanwencc/car-list)
+默认集成的选车页面源码在 github 上的地址为: [https://github.com/Hanwencc/car-list](https://github.com/Hanwencc/car-list)
 
 ## 自定义替换选车页面
 
 将任意编译后的静态页面放置在`chatgpt-share/list`目录下.
 
-然后修改`docker-compose.yml`,增加list到volumes中,例如:
+然后修改`docker-compose.yml`,增加 list 到 volumes 中,例如:
 
 ```yaml{17}
   chatgpt-share-server:
@@ -40,6 +40,12 @@
 路由模式必须为`hash`模式.
 :::
 
-## 选车页面的数据源 
+## 公告配置
 
- TODO: 选车页面的数据源
+在管理后台-系统设置-参数配置-参数列表中新增参数`notice`，值为公告内容，支持 html 标签，如下图所示：
+![公告配置1](./images/notice1.png)
+![公告配置2](./images/notice2.png)
+
+## 选车页面的数据源
+
+TODO: 选车页面的数据源
