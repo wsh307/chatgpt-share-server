@@ -61,7 +61,7 @@ func Login(r *ghttp.Request) {
 		req := r.GetMapStrStr()
 		loginVar := g.Client().PostVar(ctx, config.OauthUrl, req)
 		loginJson := gjson.New(loginVar)
-		loginJson.Dump()
+		// loginJson.Dump()
 		code := loginJson.Get("code").Int()
 		if code != 1 {
 			msg := loginJson.Get("msg").String()

@@ -71,7 +71,6 @@ func Oauth(r *ghttp.Request) {
 
 }
 
-
 // OauthFree 免费登陆接口演示
 func OauthFree(r *ghttp.Request) {
 	ctx := r.GetCtx()
@@ -102,6 +101,4 @@ func OauthFree(r *ghttp.Request) {
 		"code": 1,
 		"msg":  "登陆成功",
 	})
-	return
-
 }

@@ -25,6 +25,7 @@ export default defineUserConfig({
         "/config/list.md",
         "/config/apiauth.md",
         "/config/freemode.md",
+        "/config/oauth.md",
       ],
     },
   }),
