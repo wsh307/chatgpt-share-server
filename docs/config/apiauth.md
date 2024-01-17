@@ -4,4 +4,4 @@
 
 后台管理页面使用到的`/admin/chatgpt/xxx`接口，将会有一份同样功能的副本 `/adminapi/chatgpt/xxx`，这些接口将会使用 API 对接的方式进行访问。
 
-具体使用即在 header 中传递 `Autherization` 字段，值为 `APIAUTH`，即可访问。
+具体使用即在 header 中传递 `apiauth` 字段，值为 `APIAUTH`，即可访问。
