@@ -59,7 +59,7 @@ func Session(r *ghttp.Request) {
 	sessionJson.Set("user.image", "/avatars.png")
 	sessionJson.Set("user.picture", "/avatars.png")
 	sessionJson.Set("user.id", "user-"+usertoken)
-	sessionJson.Set("accessToken", carinfo.AccessToken)
+	sessionJson.Set("accessToken", usertoken)
 
 	r.Response.WriteJson(sessionJson)
 }
