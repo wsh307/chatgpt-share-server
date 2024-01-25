@@ -106,6 +106,8 @@ func LoginToken(r *ghttp.Request) {
 		r.Session.Set("usertoken", req["usertoken"])
 		r.Session.Set("carid", req["carid"])
 		if resptype == "json" {
+			r.Session.Set("usertoken", req["usertoken"])
+			r.Session.Set("carid", req["carid"])
 			r.Response.WriteJson(g.Map{
 				"code": 1,
 				"msg":  "登录成功",
