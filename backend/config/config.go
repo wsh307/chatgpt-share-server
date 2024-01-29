@@ -1,6 +1,8 @@
 package config
 
 import (
+	"time"
+
 	"github.com/gogf/gf/v2/encoding/gjson"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/os/gctx"
@@ -15,8 +17,8 @@ var (
 	CHATPROXY    = "https://demo.xyhelper.cn"
 	AUTHKEY      = "xyhelper"
 	ArkoseUrl    = "https://tcr9i.closeai.biz/v2/"
-	BuildId      = "MCkVH1jJi3yNLkMToVDdU"
-	CacheBuildId = "MCkVH1jJi3yNLkMToVDdU"
+	BuildId      = "PFzTxQNocNiG6gdS1bBR-"
+	CacheBuildId = "PFzTxQNocNiG6gdS1bBR-"
 	AssetPrefix  = "https://oaistatic-cdn.closeai.biz"
 	PK40         = "35536E1E-65B4-4D96-9D97-6ADB7EFF8147"
 	PK35         = "3D86FBBA-9D22-402A-B512-3420086BA6CC"
@@ -94,6 +96,25 @@ func init() {
 		APIAUTH = apiAuth
 	}
 	g.Log().Info(ctx, "APIAUTH:", APIAUTH)
+
+	// 每小时更新一次
+	go func() {
+		for {
+			build := CheckNewVersion(ctx)
+			if build != "" {
+				BuildId = build
+			}
+			g.Log().Info(ctx, "BuildId:", BuildId)
+			cacheBuildId := CheckVersion(ctx, AssetPrefix)
+			if cacheBuildId != "" {
+				CacheBuildId = cacheBuildId
+			}
+			g.Log().Info(ctx, "CacheBuildId:", CacheBuildId)
+			g.Log().Info(ctx, "CheckNewVersion:", BuildId, CacheBuildId)
+			time.Sleep(time.Hour)
+		}
+
+	}()
 }
 
 func GetEnvScript(ctx g.Ctx) string {
