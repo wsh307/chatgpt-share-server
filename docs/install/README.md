@@ -124,7 +124,7 @@ docker compose stop
 
 ```bash
 cd chatgpt-share
-docker compose start
+./deploy.sh
 ```
 
 ### 升级
