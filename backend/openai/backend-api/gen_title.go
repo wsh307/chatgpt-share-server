@@ -87,7 +87,7 @@ func GenTitle(r *ghttp.Request) {
 		match := re.FindStringSubmatch(message)
 		if len(match) == 3 {
 			count, err := cool.DBM(model.NewChatgptConversations()).Where("convid", match[1]).Count()
-			if err ==nil && count == 0 {
+			if err == nil && count == 0 {
 				cool.DBM(model.NewChatgptConversations()).Save(g.Map{
 					"convid":           match[1],
 					"title":            match[2],
@@ -96,6 +96,7 @@ func GenTitle(r *ghttp.Request) {
 					"chatgptaccountid": r.Header.Get("ChatGPT-Account-ID"),
 				})
 			}
+		}
 
 	}
 	r.Response.WriteJsonExit(respBody)
