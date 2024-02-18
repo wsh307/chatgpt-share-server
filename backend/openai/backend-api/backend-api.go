@@ -17,13 +17,13 @@ func init() {
 	backendApiGroup.PATCH("/conversations", Conversations)        // 清空会话列表
 
 	// 禁止访问的路径
-	backendApiGroup.ALL("/payments/customer_portal", Error404) // 支付
-	backendApiGroup.ALL("/settings/beta_features", Error404)   // 设置
-	backendApiGroup.ALL("/shared_conversations", Error404)     // 共享会话
-	backendApiGroup.ALL("/accounts/data_export", Error404)     // 导出数据
-	backendApiGroup.ALL("/user_system_messages", Error404)     // 系统消息
-	backendApiGroup.ALL("/payments/checkout", Error404)        // 支付
-	backendApiGroup.ALL("/accounts/*/invites", Error404)       // 邀请
+	backendApiGroup.ALL("/payments/customer_portal", Error404)   // 支付
+	backendApiGroup.ALL("/settings/beta_features", BetaFeatures) // 设置
+	backendApiGroup.ALL("/shared_conversations", Error404)       // 共享会话
+	backendApiGroup.ALL("/accounts/data_export", Error404)       // 导出数据
+	backendApiGroup.ALL("/user_system_messages", Error404)       // 系统消息
+	backendApiGroup.ALL("/payments/checkout", Error404)          // 支付
+	backendApiGroup.ALL("/accounts/*/invites", Error404)         // 邀请
 }
 
 func Error404(r *ghttp.Request) {
