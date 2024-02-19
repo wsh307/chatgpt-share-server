@@ -157,11 +157,14 @@ func Conversation(r *ghttp.Request) {
 			r.Response.WriteJson(gjson.New(res.ReadAllString()))
 			return
 		}
-		// 重设body大小
-		r.ContentLength = int64(len(gconv.Bytes(body)))
-		// 重设body内容
-		r.Request.Body = io.NopCloser(bytes.NewReader(gconv.Bytes(body)))
+
 	}
+	// model:=body.Get("model").String()
+	ChatGPTAccountID := r.Header.Get("ChatGPT-Account-ID")
+	// 重设body大小
+	r.ContentLength = int64(len(gconv.Bytes(body)))
+	// 重设body内容
+	r.Request.Body = io.NopCloser(bytes.NewReader(gconv.Bytes(body)))
 	AccessToken := carinfo.AccessToken
 	u, _ := url.Parse(config.CHATPROXY)
 	proxy := httputil.NewSingleHostReverseProxy(u)
@@ -182,7 +185,11 @@ func Conversation(r *ghttp.Request) {
 			clears_in := bodyJson.Get("detail.clears_in").Int()
 			if clears_in > 0 && clears_in != 3600 {
 				clearsDuration := time.Duration(clears_in) * time.Second
-				cool.CacheManager.Set(ctx, "clears_in:"+carid, clears_in, clearsDuration)
+				if ChatGPTAccountID == "" {
+					cool.CacheManager.Set(ctx, "clears_in:"+carid, clears_in, clearsDuration)
+				} else {
+					cool.CacheManager.Set(ctx, "team_clears_in:"+carid, clears_in, clearsDuration)
+				}
 			}
 			// 将原始内容写入到响应中
 			r.Response.Status = 429
