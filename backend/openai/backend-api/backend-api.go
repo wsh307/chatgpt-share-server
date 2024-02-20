@@ -24,6 +24,7 @@ func init() {
 	backendApiGroup.ALL("/user_system_messages", Error404)       // 系统消息
 	backendApiGroup.ALL("/payments/checkout", Error404)          // 支付
 	backendApiGroup.ALL("/accounts/*/invites", Error404)         // 邀请
+	backendApiGroup.ALL("/accounts/*/users/*", Error404)         // 成员
 }
 
 func Error404(r *ghttp.Request) {
