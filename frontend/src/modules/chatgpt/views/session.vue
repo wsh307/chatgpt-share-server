@@ -28,7 +28,7 @@
 		<f-k-arkos
 			:public-key="publicKey"
 			mode="lightbox"
-			arkosUrl="https://tcr9i.closeai.biz"
+			arkosUrl="https://tcr9i-login.closeai.biz"
 			@onCompleted="onCompleted($event)"
 			@onError="onError($event)"
 		/>
@@ -38,7 +38,6 @@
 <script lang="ts" name="chatgpt-session" setup>
 import { useCrud, useTable, useUpsert } from "@cool-vue/crud";
 import { useCool } from "/@/cool";
-import { v4 as uuidv4 } from "uuid";
 
 const { service } = useCool();
 
@@ -135,6 +134,8 @@ const Crud = useCrud(
 </script>
 <script lang="ts">
 import FKArkos from "./FKArkos.vue";
+import { ElMessage, ElMessageBox } from "element-plus";
+
 import { defineComponent } from "vue";
 export default defineComponent({
 	components: {
@@ -150,13 +151,28 @@ export default defineComponent({
 	methods: {
 		onCompleted(token: string) {
 			console.log("onCompleted---------->", token);
+			ElMessage({
+				message: "人机验证已完成.",
+				type: "success"
+			});
 			localStorage.setItem("arkoseToken", token);
 
 			this.arkoseToken = token;
 			// router.replace({ path: "/dashboard" });
 		},
 		onError(errorMessage: any) {
-			alert(errorMessage);
+			// alert(errorMessage);
+			ElMessageBox.alert("加载人机验证失败,请刷新页面重试!", errorMessage.error.error, {
+				// if you want to disable its autofocus
+				// autofocus: false,
+				confirmButtonText: "OK"
+				// callback: (action: Action) => {
+				// 	ElMessage({
+				// 		type: "info",
+				// 		message: `action: ${action}`
+				// 	});
+				// }
+			});
 		},
 
 		onSubmit() {
