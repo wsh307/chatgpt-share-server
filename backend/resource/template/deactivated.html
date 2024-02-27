@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>清理本地存储</title>
+    <script>
+        function clearLocalStorageAndRedirect() {
+            localStorage.clear();
+            window.location.href = '/'; // 请将此处替换为你的首页地址
+        }
+    </script>
+</head>
+<body onload="clearLocalStorageAndRedirect()">
+</body>
+</html>
