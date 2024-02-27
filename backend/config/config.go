@@ -16,7 +16,7 @@ var (
 	PORT         = 8001
 	CHATPROXY    = "https://demo.xyhelper.cn"
 	AUTHKEY      = "xyhelper"
-	ArkoseUrl    = "https://tcr9i.closeai.biz/v2/"
+	ArkoseUrl    = "/v2/"
 	BuildId      = "LxJWDayKNMzRjO_Ay4ljN"
 	CacheBuildId = "LxJWDayKNMzRjO_Ay4ljN"
 	AssetPrefix  = "https://oaistatic-cdn.closeai.biz"
