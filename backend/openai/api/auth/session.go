@@ -10,6 +10,7 @@ import (
 	"github.com/gogf/gf/v2/encoding/gjson"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/net/ghttp"
+	"github.com/gogf/gf/v2/text/gstr"
 )
 
 var (
@@ -46,7 +47,7 @@ func Session(r *ghttp.Request) {
 	})
 	sessionJson := gjson.New(getsessionVar)
 	detail := sessionJson.Get("detail").String()
-	if detail != "" {
+	if gstr.Contains(detail, "Your authentication token has expired. Please try signing in again.") {
 		utility.CloseCar(ctx, carid)
 		r.Response.Status = 401
 		r.Response.WriteJson(gjson.New(errSessionStr))
