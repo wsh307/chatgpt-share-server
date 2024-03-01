@@ -44,6 +44,7 @@ const { service } = useCool();
 // cl-upsert 配置
 const Upsert = useUpsert({
 	items: [
+		{ label: "排序", prop: "sort", component: { name: "el-input-number" } },
 		{ label: "车号", prop: "carID", required: true, component: { name: "el-input" } },
 
 		{ label: "邮箱", prop: "email", required: true, component: { name: "el-input" } },
@@ -86,6 +87,10 @@ const Upsert = useUpsert({
 		if (!data.carID) {
 			data.carID = Math.random().toString(36).substring(2, 10);
 		}
+		// 给sort赋值0
+		if (!data.sort) {
+			data.sort = 0;
+		}
 		localStorage.removeItem("arkoseToken");
 		window.myEnforcement.run();
 	},
@@ -108,16 +113,16 @@ const Table = useTable({
 	columns: [
 		{ type: "selection" },
 		{ label: "id", prop: "id" },
-		{ label: "创建时间", prop: "createTime" },
-		{ label: "更新时间", prop: "updateTime" },
-		{ label: "车号", prop: "carID" },
-
-		{ label: "邮箱", prop: "email" },
-		{ label: "密码", prop: "password" },
-		{ label: "状态", prop: "status", component: { name: "cl-switch" } },
+		{ label: "创建时间", prop: "createTime", sortable: true },
+		{ label: "更新时间", prop: "updateTime", sortable: true },
+		{ label: "排序", prop: "sort", sortable: true },
+		{ label: "车号", prop: "carID", sortable: true },
+		{ label: "邮箱", prop: "email", sortable: true },
+		{ label: "密码", prop: "password", sortable: true },
+		{ label: "状态", prop: "status", sortable: true, component: { name: "cl-switch" } },
 		{ label: "PLUS", prop: "isPlus", component: { name: "cl-switch" } },
-		{ label: "session", prop: "officialSession", showOverflowTooltip: true },
-		{ label: "备注", prop: "remark", showOverflowTooltip: true },
+		{ label: "session", prop: "officialSession", sortable: true, showOverflowTooltip: true },
+		{ label: "备注", prop: "remark", sortable: true, showOverflowTooltip: true },
 		{ type: "op", buttons: ["edit", "delete"] }
 	]
 });

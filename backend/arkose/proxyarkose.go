@@ -1,6 +1,7 @@
 package arkose
 
 import (
+	"backend/utility"
 	"net/http/httputil"
 	"net/url"
 
@@ -22,6 +23,16 @@ func init() {
 
 func ProxyArkose(r *ghttp.Request) {
 	ctx := r.GetCtx()
+	carid := r.Session.MustGet("carid").String()
+	_, err := utility.CheckCar(ctx, carid)
+	if err != nil {
+		g.Log().Error(ctx, err)
+		r.Response.Status = 401
+		r.Response.WriteJson(g.Map{
+			"detail": "Authentication credentials were not provided.",
+		})
+		return
+	}
 	path := r.RequestURI
 
 	newreq := r.Request.Clone(ctx)

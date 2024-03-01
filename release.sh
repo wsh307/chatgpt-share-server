@@ -22,4 +22,4 @@ docker tag xyhelper/chatgpt-share-server:latest xyhelper/chatgpt-share-server:$n
 docker push xyhelper/chatgpt-share-server:$now
 echo "release success" $now
 # 写入发布日志 release.log
-echo $now >> release.log
+echo $now >> ../release.log
