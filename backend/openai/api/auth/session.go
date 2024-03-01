@@ -57,10 +57,26 @@ func Session(r *ghttp.Request) {
 	// sessionJson.Dump()
 	email := sessionJson.Get("user.email").String()
 	if email == "" {
-		r.Response.WriteJson(g.Map{
-			"code": 0,
-			"msg":  "email is empty",
-		})
+		// 先使用缓存中的session
+		sessionVar, err := cool.CacheManager.Get(ctx, "session:"+carid)
+		if err != nil {
+			r.Response.Status = 401
+			r.Response.WriteJson(gjson.New(errSessionStr))
+			return
+		}
+		sessionJson = gjson.New(sessionVar)
+		// 移除sessionJson中的refreshCookie
+		sessionJson.Remove("refreshCookie")
+		// 移除sessionJson中的models
+		sessionJson.Remove("models")
+		sessionJson.Set("user.email", "share@openai.com")
+		sessionJson.Set("user.name", carid)
+		sessionJson.Set("user.image", "/avatars.png")
+		sessionJson.Set("user.picture", "/avatars.png")
+		sessionJson.Set("user.id", "user-"+usertoken)
+		sessionJson.Set("accessToken", usertoken)
+
+		r.Response.WriteJson(sessionJson)
 		return
 	}
 	models := sessionJson.Get("models").Array()
