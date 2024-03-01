@@ -12,6 +12,18 @@ import (
 	"github.com/gogf/gf/v2/net/ghttp"
 )
 
+var (
+	errSessionStr = `
+	{
+		"detail": {
+			"type":    "invalid_request_error",
+			"param":   <nil>,
+			"code":    "session_invalidated",
+			"message": "Your authentication token has expired. Please try signing in again.",
+		},
+	}`
+)
+
 func Session(r *ghttp.Request) {
 	ctx := r.GetCtx()
 	usertoken := r.Session.MustGet("usertoken").String()
@@ -26,12 +38,21 @@ func Session(r *ghttp.Request) {
 		})
 		return
 	}
+
 	getsessionUrl := config.CHATPROXY + "/getsession"
 	getsessionVar := g.Client().PostVar(ctx, getsessionUrl, g.MapStrStr{
 		"refreshCookie": carinfo.RefreshCookie,
 		"authkey":       config.AUTHKEY,
 	})
 	sessionJson := gjson.New(getsessionVar)
+	detail := sessionJson.Get("detail").String()
+	if detail != "" {
+		utility.CloseCar(ctx, carid)
+		r.Response.Status = 401
+		r.Response.WriteJson(gjson.New(errSessionStr))
+		return
+
+	}
 	// sessionJson.Dump()
 	email := sessionJson.Get("user.email").String()
 	if email == "" {

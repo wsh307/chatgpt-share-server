@@ -57,3 +57,9 @@ func CheckCar(ctx g.Ctx, carid string) (carInfo *CarInfo, err error) {
 	}
 	return
 }
+
+// CloseCar is a function that closes a car.
+func CloseCar(ctx g.Ctx, carid string) (err error) {
+	_, err = cool.CacheManager.Remove(ctx, "session:"+carid)
+	return
+}
