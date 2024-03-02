@@ -97,7 +97,7 @@ func init() {
 	}
 	g.Log().Info(ctx, "APIAUTH:", APIAUTH)
 
-	// 每小时更新一次
+	// 每10分钟检查一次版本
 	go func() {
 		for {
 			build := CheckNewVersion(ctx)
@@ -111,7 +111,7 @@ func init() {
 			}
 			g.Log().Info(ctx, "CacheBuildId:", CacheBuildId)
 			g.Log().Info(ctx, "CheckNewVersion:", BuildId, CacheBuildId)
-			time.Sleep(time.Hour)
+			time.Sleep(10 * time.Minute)
 		}
 
 	}()
