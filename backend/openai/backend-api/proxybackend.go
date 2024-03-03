@@ -11,6 +11,7 @@ import (
 	"github.com/cool-team-official/cool-admin-go/cool"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/net/ghttp"
+	"github.com/gogf/gf/v2/text/gstr"
 )
 
 func ProxyBackend(r *ghttp.Request) {
@@ -18,6 +19,19 @@ func ProxyBackend(r *ghttp.Request) {
 	// usertoken := r.Session.MustGet("usertoken").String()
 	carid := r.Session.MustGet("carid").String()
 	conv := r.GetRouter("convid").String()
+	fileid := r.GetRouter("fileid").String()
+	if fileid != "" {
+		g.Log().Info(ctx, "fileid:", fileid)
+		refer := r.Referer()
+		g.Log().Info(ctx, "refer:", refer)
+		// http://localhost:8001/c/98b65c1a-27e1-40d3-b045-49c11b34d768
+		// 从refer中获取convid /c/ 后面的内容
+		referArr := gstr.Split(refer, "/c/")
+		if len(referArr) > 1 {
+			conv = referArr[1]
+			g.Log().Info(ctx, "conv:", conv)
+		}
+	}
 	// chatgptaccountid := r.Header.Get("ChatGPT-Account-ID")
 	if conv != "" {
 		g.Log().Info(ctx, "conv:", conv)
@@ -48,14 +62,17 @@ func ProxyBackend(r *ghttp.Request) {
 			})
 			return
 		}
-		r.Session.Set("carid", carid)
+		// r.Session.Set("carid", carid)
 		chatgptaccountid := result["chatgptaccountid"].String()
 		if chatgptaccountid != "" {
 			r.Header.Set("ChatGPT-Account-ID", chatgptaccountid)
 		} else {
 			r.Header.Del("ChatGPT-Account-ID")
 		}
-
+		// r.Session.Set("carid", carid)
+		// r.Session.Set("chatgptaccountid", chatgptaccountid)
+		r.Session.Set("convcarid", carid)
+		r.Session.Set("convchatgptaccountid", chatgptaccountid)
 	}
 
 	carinfo, err := utility.CheckCar(ctx, carid)

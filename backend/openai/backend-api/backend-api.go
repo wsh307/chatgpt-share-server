@@ -14,6 +14,7 @@ func init() {
 	backendApiGroup.POST("/conversation", Conversation)           // 会话
 	backendApiGroup.POST("/conversation/gen_title/:id", GenTitle) // 生成标题
 	backendApiGroup.GET("/conversation/:convid", ProxyBackend)    // 获取会话
+	backendApiGroup.GET("/files/:fileid/download", ProxyBackend)  // 文件下载
 	backendApiGroup.PATCH("/conversation/:id", ConversationPATCH) // 修改会话 删除会话
 	backendApiGroup.PATCH("/conversations", Conversations)        // 清空会话列表
 

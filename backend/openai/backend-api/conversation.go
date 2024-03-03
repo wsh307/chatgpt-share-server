@@ -150,7 +150,57 @@ func Conversation(r *ghttp.Request) {
 		})
 		return
 	}
+	// 读取请求内容
+	body, err := r.GetJson()
+	if err != nil {
+		r.Response.Status = 400
+		r.Response.WriteJson(g.Map{
+			"detail": "Unable to parse request body.",
+		})
+		return
+	}
+	conv := body.Get("conversation_id").String()
 	carid := r.Session.MustGet("carid").String()
+	if conv != "" {
+		g.Log().Info(ctx, "conv:", conv)
+		// 查询会话
+		result, err := cool.DBM(model.NewChatgptConversations()).Where(g.Map{
+			"convid": conv,
+		}).One()
+		if err != nil {
+			g.Log().Error(ctx, err)
+			r.Response.Status = 500
+			r.Response.WriteJson(g.Map{
+				"detail": "Internal Server Error",
+			})
+			return
+		}
+		if result == nil {
+			r.Response.Status = 404
+			r.Response.WriteJson(g.Map{
+				"detail": "Can't load conversation " + conv,
+			})
+			return
+		}
+		carid = cool.CacheManager.MustGet(ctx, "email:"+result["email"].String()).String()
+		if carid == "" {
+			r.Response.Status = 404
+			r.Response.WriteJson(g.Map{
+				"detail": "The car " + conv + " belongs to is unavailable",
+			})
+			return
+		}
+		// r.Session.Set("carid", carid)
+		chatgptaccountid := result["chatgptaccountid"].String()
+		if chatgptaccountid != "" {
+			r.Header.Set("ChatGPT-Account-ID", chatgptaccountid)
+		} else {
+			r.Header.Del("ChatGPT-Account-ID")
+		}
+		// r.Session.Set("carid", carid)
+		// r.Session.Set("chatgptaccountid", chatgptaccountid)
+
+	}
 	carinfo, err := utility.CheckCar(ctx, carid)
 	if err != nil {
 		g.Log().Error(ctx, err)
@@ -161,15 +211,7 @@ func Conversation(r *ghttp.Request) {
 		return
 	}
 	utility.GetStatsInstance(carid).RecordCall()
-	// 读取请求内容
-	body, err := r.GetJson()
-	if err != nil {
-		r.Response.Status = 400
-		r.Response.WriteJson(g.Map{
-			"detail": "Unable to parse request body.",
-		})
-		return
-	}
+
 	// 如果配置了限制url
 	if config.AuditLimitUrl != "" {
 
