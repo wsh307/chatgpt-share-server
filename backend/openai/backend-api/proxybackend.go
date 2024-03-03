@@ -44,7 +44,7 @@ func ProxyBackend(r *ghttp.Request) {
 		if carid == "" {
 			r.Response.Status = 404
 			r.Response.WriteJson(g.Map{
-				"detail": "Can't load conversation " + conv,
+				"detail": "The car " + conv + " belongs to is unavailable",
 			})
 			return
 		}
