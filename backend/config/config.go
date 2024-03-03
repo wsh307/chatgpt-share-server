@@ -36,6 +36,7 @@ var (
 	OauthUrl      = ""
 	AuditLimitUrl = ""
 	APIAUTH       = ""
+	DISALLOW_ROAM = false
 	// Generator *badge.Generator
 )
 
@@ -78,6 +79,10 @@ func init() {
 	s := g.Server()
 	s.SetPort(PORT)
 	s.SetServerRoot("resource/public")
+	disallowRoam := g.Cfg().MustGetWithEnv(ctx, "DISALLOW_ROAM").Bool()
+	if disallowRoam {
+		DISALLOW_ROAM = disallowRoam
+	}
 
 	oauthUrl := g.Cfg().MustGetWithEnv(ctx, "OAUTH_URL").String()
 	if oauthUrl != "" {

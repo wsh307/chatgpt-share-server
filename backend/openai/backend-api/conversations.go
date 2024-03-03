@@ -1,7 +1,9 @@
 package backendapi
 
 import (
+	"backend/config"
 	"backend/modules/chatgpt/model"
+	"backend/utility"
 
 	"github.com/cool-team-official/cool-admin-go/cool"
 	"github.com/gogf/gf/v2/frame/g"
@@ -26,30 +28,38 @@ func Conversations(r *ghttp.Request) {
 		})
 		return
 	}
-	// carid := r.Session.MustGet("carid").String()
-	// carinfo, err := utility.CheckCar(ctx, carid)
 	method := r.Method
+	carid := r.Session.MustGet("carid").String()
+	carinfo, err := utility.CheckCar(ctx, carid)
 
-	// if err != nil {
-	// 	g.Log().Error(ctx, err)
-	// 	r.Response.Status = 401
-	// 	r.Response.WriteJson(g.Map{
-	// 		"detail": "Authentication credentials were not provided.",
-	// 	})
-	// 	return
-	// }
+	if err != nil {
+		g.Log().Error(ctx, err)
+		r.Response.Status = 401
+		r.Response.WriteJson(g.Map{
+			"detail": "Authentication credentials were not provided.",
+		})
+		return
+	}
 	// 会话列表
 	if method == "GET" {
 		offset := r.Get("offset").Int()
 		limit := r.Get("limit").Int()
 		// total := 100
+		modelquery := cool.DBM(model.NewChatgptConversations()).As("a").LeftJoin("chatgpt_session", "b", "a.email=b.email").Fields("a.createTime", "a.updateTime", "a.convid", "a.title")
+		if config.DISALLOW_ROAM {
+			modelquery.Where(g.Map{
+				"a.usertoken":        usertoken,
+				"a.email":            carinfo.Email,
+				"a.chatgptaccountid": r.Header.Get("ChatGPT-Account-ID"),
+			})
 
-		items, total, err := cool.DBM(model.NewChatgptConversations()).As("a").LeftJoin("chatgpt_session", "b", "a.email=b.email").Fields("a.createTime", "a.updateTime", "a.convid", "a.title").Where(g.Map{
-			"a.usertoken": usertoken,
-			"b.status":    "1",
-			// "email":            carinfo.Email,
-			// "chatgptaccountid": r.Header.Get("ChatGPT-Account-ID"),
-		}).OrderDesc("a.updateTime").Limit(limit).Offset(offset).AllAndCount(false)
+		} else {
+			modelquery.Where(g.Map{
+				"a.usertoken": usertoken,
+				"b.status":    "1",
+			})
+		}
+		items, total, err := modelquery.OrderDesc("a.updateTime").Limit(limit).Offset(offset).AllAndCount(false)
 		if err != nil {
 			g.Log().Error(ctx, err)
 			r.Response.Status = 500
