@@ -30,17 +30,6 @@ func ConversationPATCH(r *ghttp.Request) {
 		})
 		return
 	}
-	carid := r.Session.MustGet("carid").String()
-	carinfo, err := utility.CheckCar(ctx, carid)
-
-	if err != nil {
-		g.Log().Error(ctx, err)
-		r.Response.Status = 401
-		r.Response.WriteJson(g.Map{
-			"detail": "Authentication credentials were not provided.",
-		})
-		return
-	}
 
 	conversationId := r.GetRouter("id").String()
 	reqJson, err := r.GetJson()
@@ -67,11 +56,59 @@ func ConversationPATCH(r *ghttp.Request) {
 	}
 	title := reqJson.Get("title").String()
 	// 如果title不为空，则修改对话标题
+	chatgptaccountid := r.Header.Get("ChatGPT-Account-ID")
+	carid := r.Session.MustGet("carid").String()
+	conv := conversationId
+	if conv != "" {
+		g.Log().Info(ctx, "conv:", conv)
+		// 查询会话
+		result, err := cool.DBM(model.NewChatgptConversations()).Where(g.Map{
+			"convid": conv,
+		}).One()
+		if err != nil {
+			g.Log().Error(ctx, err)
+			r.Response.Status = 500
+			r.Response.WriteJson(g.Map{
+				"detail": "Internal Server Error",
+			})
+			return
+		}
+		if result == nil {
+			r.Response.Status = 404
+			r.Response.WriteJson(g.Map{
+				"detail": "Can't load conversation " + conv,
+			})
+			return
+		}
+		carid = cool.CacheManager.MustGet(ctx, "email:"+result["email"].String()).String()
+		if carid == "" {
+			r.Response.Status = 404
+			r.Response.WriteJson(g.Map{
+				"detail": "The car " + conv + " belongs to is unavailable",
+			})
+			return
+		}
+		r.Session.Set("carid", carid)
+		chatgptaccountid = result["chatgptaccountid"].String()
+
+	}
+	carinfo, err := utility.CheckCar(ctx, carid)
+
+	if err != nil {
+		g.Log().Error(ctx, err)
+		r.Response.Status = 401
+		r.Response.WriteJson(g.Map{
+			"detail": "Authentication credentials were not provided.",
+		})
+		return
+	}
+
 	AccessToken := carinfo.AccessToken
 	originUrl := config.CHATPROXY + "/backend-api/conversation/" + conversationId
 	resp, err := g.Client().SetAgent(r.Header.Get("User-Agent")).SetHeaderMap(g.MapStrStr{
-		"Authorization": "Bearer " + AccessToken,
-		"Content-Type":  "application/json",
+		"Authorization":      "Bearer " + AccessToken,
+		"Content-Type":       "application/json",
+		"ChatGPT-Account-ID": chatgptaccountid,
 	}).Patch(ctx, originUrl, g.MapStrStr{
 		"title": title,
 	})
