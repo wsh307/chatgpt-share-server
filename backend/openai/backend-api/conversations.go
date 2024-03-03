@@ -44,9 +44,9 @@ func Conversations(r *ghttp.Request) {
 		offset := r.Get("offset").Int()
 		limit := r.Get("limit").Int()
 		items, total, err := cool.DBM(model.NewChatgptConversations()).Where(g.Map{
-			"usertoken":        usertoken,
-			"email":            carinfo.Email,
-			"chatgptaccountid": r.Header.Get("ChatGPT-Account-ID"),
+			"usertoken": usertoken,
+			// "email":            carinfo.Email,
+			// "chatgptaccountid": r.Header.Get("ChatGPT-Account-ID"),
 		}).OrderDesc("updateTime").Limit(limit).Offset(offset).AllAndCount(true)
 		if err != nil {
 			g.Log().Error(ctx, err)

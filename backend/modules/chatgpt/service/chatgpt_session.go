@@ -9,6 +9,7 @@ import (
 	"github.com/gogf/gf/v2/encoding/gjson"
 	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/frame/g"
+	"github.com/gogf/gf/v2/os/gctx"
 	"github.com/gogf/gf/v2/util/gconv"
 )
 
@@ -99,4 +100,17 @@ func (s *ChatgptSessionService) ModifyAfter(ctx g.Ctx, method string, param map[
 	}
 	cool.CacheManager.Set(ctx, "session:"+gconv.String(param["carID"]), sessionJson.String(), 90*24*time.Hour)
 	return
+}
+
+func init() {
+	ctx := gctx.GetInitCtx()
+	sessionRecords, err := cool.DBM(NewChatgptSessionService().Model).All()
+	if err != nil {
+		panic(err)
+	}
+	for _, record := range sessionRecords {
+		g.Dump(record)
+		cool.CacheManager.Set(ctx, "session:"+record["carID"].String(), record["officialSession"].String(), 90*24*time.Hour)
+		cool.CacheManager.Set(ctx, "email:"+record["email"].String(), record["carID"].String(), 90*24*time.Hour)
+	}
 }
