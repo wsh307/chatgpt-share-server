@@ -54,7 +54,16 @@ func ProxyBackend(r *ghttp.Request) {
 			})
 			return
 		}
-		carid = cool.CacheManager.MustGet(ctx, "email:"+result["email"].String()).String()
+		caridVar, err := cool.CacheManager.Get(ctx, "email:"+result["email"].String())
+		if err != nil {
+			g.Log().Error(ctx, err)
+			r.Response.Status = 500
+			r.Response.WriteJson(g.Map{
+				"detail": "Internal Server Error",
+			})
+			return
+		}
+		carid = caridVar.String()
 		if carid == "" {
 			r.Response.Status = 404
 			r.Response.WriteJson(g.Map{
