@@ -42,11 +42,14 @@ func Conversations(r *ghttp.Request) {
 	if method == "GET" {
 		offset := r.Get("offset").Int()
 		limit := r.Get("limit").Int()
-		items, total, err := cool.DBM(model.NewChatgptConversations()).Where(g.Map{
-			"usertoken": usertoken,
+		// total := 100
+
+		items, total, err := cool.DBM(model.NewChatgptConversations()).As("a").LeftJoin("chatgpt_session", "b", "a.email=b.email").Fields("a.createTime", "a.updateTime", "a.convid", "a.title").Where(g.Map{
+			"a.usertoken": usertoken,
+			"b.status":    "1",
 			// "email":            carinfo.Email,
 			// "chatgptaccountid": r.Header.Get("ChatGPT-Account-ID"),
-		}).OrderDesc("updateTime").Limit(limit).Offset(offset).AllAndCount(true)
+		}).OrderDesc("a.updateTime").Limit(limit).Offset(offset).AllAndCount(false)
 		if err != nil {
 			g.Log().Error(ctx, err)
 			r.Response.Status = 500
