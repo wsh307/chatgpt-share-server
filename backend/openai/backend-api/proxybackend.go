@@ -20,6 +20,40 @@ func ProxyBackend(r *ghttp.Request) {
 	ctx := r.GetCtx()
 	// usertoken := r.Session.MustGet("usertoken").String()
 	carid := r.Session.MustGet("carid").String()
+
+	carinfo, err := utility.CheckCar(ctx, carid)
+	if err != nil {
+		g.Log().Error(ctx, err)
+		r.Response.Status = 401
+		r.Response.WriteJson(g.Map{
+			"detail": "Authentication credentials were not provided.",
+		})
+		return
+	}
+
+	Authorization := r.Header.Get("Authorization")
+	if Authorization != "" {
+		r.Header.Set("Authorization", "Bearer "+carinfo.AccessToken)
+	}
+
+	u, _ := url.Parse(config.CHATPROXY)
+	proxy := httputil.NewSingleHostReverseProxy(u)
+	proxy.ErrorHandler = func(writer http.ResponseWriter, request *http.Request, e error) {
+		g.Log().Error(ctx, e)
+		writer.WriteHeader(http.StatusBadGateway)
+	}
+	newreq := r.Request.Clone(ctx)
+	newreq.URL.Host = u.Host
+	newreq.URL.Scheme = u.Scheme
+	newreq.Host = u.Host
+	// g.Dump(newreq.Header)
+	newreq.Header.Set("authkey", config.AUTHKEY)
+	proxy.ServeHTTP(r.Response.Writer.RawWriter(), newreq)
+}
+func ProxyBackendWithCar(r *ghttp.Request) {
+	ctx := r.GetCtx()
+	// usertoken := r.Session.MustGet("usertoken").String()
+	carid := r.Session.MustGet("carid").String()
 	conv := r.GetRouter("convid").String()
 
 	refer := r.Referer()

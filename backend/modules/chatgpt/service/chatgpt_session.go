@@ -3,7 +3,6 @@ package service
 import (
 	"backend/config"
 	"backend/modules/chatgpt/model"
-	"time"
 
 	"github.com/cool-team-official/cool-admin-go/cool"
 	"github.com/gogf/gf/v2/encoding/gjson"
@@ -50,6 +49,8 @@ func (s *ChatgptSessionService) ModifyBefore(ctx g.Ctx, method string, param map
 			}
 			carid := record["carID"].String()
 			cool.CacheManager.Remove(ctx, "session:"+carid)
+			email := record["email"].String()
+			cool.CacheManager.Remove(ctx, "email:"+email)
 		}
 	}
 	return
@@ -98,7 +99,7 @@ func (s *ChatgptSessionService) ModifyAfter(ctx g.Ctx, method string, param map[
 		g.Log().Error(ctx, "ChatgptSessionService.ModifyAfter", "update session error", err)
 		return
 	}
-	cool.CacheManager.Set(ctx, "session:"+gconv.String(param["carID"]), sessionJson.String(), 90*24*time.Hour)
+	cool.CacheManager.Set(ctx, "session:"+gconv.String(param["carID"]), sessionJson.String(), 0)
 	cool.CacheManager.Set(ctx, "email:"+gconv.String(param["email"]), gconv.String(param["carID"]), 0)
 	return
 }
@@ -111,7 +112,7 @@ func init() {
 	}
 	for _, record := range sessionRecords {
 		// g.Dump(record)
-		cool.CacheManager.Set(ctx, "session:"+record["carID"].String(), record["officialSession"].String(), 90*24*time.Hour)
+		cool.CacheManager.Set(ctx, "session:"+record["carID"].String(), record["officialSession"].String(), 0)
 		cool.CacheManager.Set(ctx, "email:"+record["email"].String(), record["carID"].String(), 0)
 	}
 }
