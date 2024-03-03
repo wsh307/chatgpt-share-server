@@ -52,6 +52,8 @@ func ProxyBackend(r *ghttp.Request) {
 		chatgptaccountid := result["chatgptaccountid"].String()
 		if chatgptaccountid != "" {
 			r.Header.Set("ChatGPT-Account-ID", chatgptaccountid)
+		} else {
+			r.Header.Del("ChatGPT-Account-ID")
 		}
 
 	}
