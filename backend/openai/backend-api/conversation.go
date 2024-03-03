@@ -58,7 +58,7 @@ func ConversationPATCH(r *ghttp.Request) {
 		cool.DBM(model.NewChatgptConversations()).Where(g.Map{
 			"convid":    conversationId,
 			"usertoken": usertoken,
-			"email":     carinfo.Email,
+			// "email":     carinfo.Email,
 		}).Delete()
 		r.Response.WriteJson(g.Map{
 			"succeed": true,

@@ -2,7 +2,6 @@ package backendapi
 
 import (
 	"backend/modules/chatgpt/model"
-	"backend/utility"
 
 	"github.com/cool-team-official/cool-admin-go/cool"
 	"github.com/gogf/gf/v2/frame/g"
@@ -27,18 +26,18 @@ func Conversations(r *ghttp.Request) {
 		})
 		return
 	}
-	carid := r.Session.MustGet("carid").String()
-	carinfo, err := utility.CheckCar(ctx, carid)
+	// carid := r.Session.MustGet("carid").String()
+	// carinfo, err := utility.CheckCar(ctx, carid)
 	method := r.Method
 
-	if err != nil {
-		g.Log().Error(ctx, err)
-		r.Response.Status = 401
-		r.Response.WriteJson(g.Map{
-			"detail": "Authentication credentials were not provided.",
-		})
-		return
-	}
+	// if err != nil {
+	// 	g.Log().Error(ctx, err)
+	// 	r.Response.Status = 401
+	// 	r.Response.WriteJson(g.Map{
+	// 		"detail": "Authentication credentials were not provided.",
+	// 	})
+	// 	return
+	// }
 	// 会话列表
 	if method == "GET" {
 		offset := r.Get("offset").Int()
@@ -90,9 +89,9 @@ func Conversations(r *ghttp.Request) {
 	// 清除所有会话
 	if method == "PATCH" {
 		cool.DBM(model.NewChatgptConversations()).Where(g.Map{
-			"usertoken":        usertoken,
-			"email":            carinfo.Email,
-			"chatgptaccountid": r.Header.Get("ChatGPT-Account-ID"),
+			"usertoken": usertoken,
+			// "email":            carinfo.Email,
+			// "chatgptaccountid": r.Header.Get("ChatGPT-Account-ID"),
 		}).Delete()
 		r.Response.WriteJson(g.Map{
 			"success": true,

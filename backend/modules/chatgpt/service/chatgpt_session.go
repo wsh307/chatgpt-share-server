@@ -99,6 +99,7 @@ func (s *ChatgptSessionService) ModifyAfter(ctx g.Ctx, method string, param map[
 		return
 	}
 	cool.CacheManager.Set(ctx, "session:"+gconv.String(param["carID"]), sessionJson.String(), 90*24*time.Hour)
+	cool.CacheManager.Set(ctx, "email:"+gconv.String(param["email"]), gconv.String(param["carID"]), 0)
 	return
 }
 
@@ -109,8 +110,8 @@ func init() {
 		panic(err)
 	}
 	for _, record := range sessionRecords {
-		g.Dump(record)
+		// g.Dump(record)
 		cool.CacheManager.Set(ctx, "session:"+record["carID"].String(), record["officialSession"].String(), 90*24*time.Hour)
-		cool.CacheManager.Set(ctx, "email:"+record["email"].String(), record["carID"].String(), 90*24*time.Hour)
+		cool.CacheManager.Set(ctx, "email:"+record["email"].String(), record["carID"].String(), 0)
 	}
 }
