@@ -177,21 +177,29 @@ func Conversation(r *ghttp.Request) {
 		}
 		// 如果会话存在，获取车辆id
 		if result != nil {
-			carid = cool.CacheManager.MustGet(ctx, "email:"+result["email"].String()).String()
-			if carid == "" {
-				r.Response.Status = 404
+			email := gconv.String(result["email"])
+			caridVar, err := g.Redis("cool").Get(ctx, "email:"+email)
+			// caridVar, err := cool.CacheManager.Get(ctx, "email:"+email)
+			if err != nil {
+				g.Log().Error(ctx, err)
+				r.Response.Status = 500
 				r.Response.WriteJson(g.Map{
-					"detail": "The car " + conv + " belongs to is unavailable",
+					"detail": err.Error(),
 				})
 				return
 			}
-			// r.Session.Set("carid", carid)
-			chatgptaccountid := result["chatgptaccountid"].String()
-			if chatgptaccountid != "" {
-				r.Header.Set("ChatGPT-Account-ID", chatgptaccountid)
-			} else {
-				r.Header.Del("ChatGPT-Account-ID")
+			if !caridVar.IsNil() {
+				g.Log().Info(ctx, conv, "carid:", caridVar.String())
+				carid = caridVar.String()
+				// r.Session.Set("carid", carid)
+				chatgptaccountid := result["chatgptaccountid"].String()
+				if chatgptaccountid != "" {
+					r.Header.Set("ChatGPT-Account-ID", chatgptaccountid)
+				} else {
+					r.Header.Del("ChatGPT-Account-ID")
+				}
 			}
+
 		}
 
 	}

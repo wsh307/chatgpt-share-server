@@ -91,7 +91,8 @@ func ProxyBackendWithCar(r *ghttp.Request) {
 			})
 			return
 		}
-		caridVar, err := cool.CacheManager.Get(ctx, "email:"+result["email"].String())
+		email := result["email"].String()
+		caridVar, err := g.Redis("cool").Get(ctx, "email:"+email)
 		if err != nil {
 			g.Log().Error(ctx, err)
 			r.Response.Status = 500
@@ -101,6 +102,8 @@ func ProxyBackendWithCar(r *ghttp.Request) {
 			return
 		}
 		carid = caridVar.String()
+		g.Log().Info(ctx, conv, "email:", email, "carid:", caridVar.String())
+
 		if carid == "" {
 			r.Response.Status = 404
 			r.Response.WriteJson(g.Map{
