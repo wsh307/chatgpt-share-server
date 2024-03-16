@@ -70,3 +70,6 @@ AUTHKEY: "xyhelper"
 OAUTH_URL: "http://127.0.0.1:8001/auth/oauthfree"
 # 是否关闭会话漫游 true 关闭 false 开启
 DISALLOW_ROAM: false
+
+# 文件服务器
+FILE_SERVER: "https://files.oaiusercontent.com"

@@ -160,7 +160,7 @@ func ProxyBackendWithCar(r *ghttp.Request) {
 				return err
 			}
 			// 修改返回内容
-			body = []byte(strings.ReplaceAll(string(body), "https://files.oaiusercontent.com", ""))
+			body = []byte(strings.ReplaceAll(string(body), "https://files.oaiusercontent.com", config.FILESERVER))
 			// 写入返回内容
 			resp.Body = io.NopCloser(strings.NewReader(string(body)))
 
@@ -174,7 +174,7 @@ func ProxyBackendWithCar(r *ghttp.Request) {
 				return err
 			}
 			// 修改返回内容
-			body = []byte(strings.ReplaceAll(string(body), "https://files.oaiusercontent.com", ""))
+			body = []byte(strings.ReplaceAll(string(body), "https://files.oaiusercontent.com", config.FILESERVER))
 			// 写入返回内容
 			resp.Body = io.NopCloser(strings.NewReader(string(body)))
 		}
@@ -187,7 +187,7 @@ func ProxyBackendWithCar(r *ghttp.Request) {
 				return err
 			}
 			// 修改返回内容
-			body = []byte(strings.ReplaceAll(string(body), "https://files.oaiusercontent.com", ""))
+			body = []byte(strings.ReplaceAll(string(body), "https://files.oaiusercontent.com", config.FILESERVER))
 			// 写入返回内容
 			resp.Body = io.NopCloser(strings.NewReader(string(body)))
 		}
