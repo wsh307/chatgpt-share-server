@@ -72,4 +72,4 @@ OAUTH_URL: "http://127.0.0.1:8001/auth/oauthfree"
 DISALLOW_ROAM: false
 
 # 文件服务器
-FILE_SERVER: "https://files.oaiusercontent.com"
+# FILE_SERVER: "https://files.oaiusercontent.com"
