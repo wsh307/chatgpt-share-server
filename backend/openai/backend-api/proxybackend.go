@@ -50,6 +50,7 @@ func ProxyBackend(r *ghttp.Request) {
 	newreq.Host = u.Host
 	// g.Dump(newreq.Header)
 	newreq.Header.Set("authkey", config.AUTHKEY)
+
 	proxy.ServeHTTP(r.Response.Writer.RawWriter(), newreq)
 }
 func ProxyBackendWithCar(r *ghttp.Request) {
@@ -143,6 +144,20 @@ func ProxyBackendWithCar(r *ghttp.Request) {
 		writer.WriteHeader(http.StatusBadGateway)
 	}
 	g.Log().Debug(ctx, "ModifyResponse", r.Request.URL.Path)
+	if r.Request.URL.Path == "/backend-api/sentinel/chat-requirements" {
+		// 如果是获取聊天验证，记录一下当前车号到session
+		r.Session.Set("requirements-carid", carid)
+	}
+	if r.Request.URL.Path == "/backend-api/conversation" {
+		// 如果是会话请求，验证车号是否和聊天验证记录的车号一致
+		requirementsCarid := r.Session.MustGet("requirements-carid").String()
+		g.Log().Info(ctx, "requirements-carid:", requirementsCarid, "carid:", carid)
+
+		if requirementsCarid != carid {
+			g.Log().Error(ctx, "requirements-carid:", requirementsCarid, "carid:", carid)
+		}
+
+	}
 
 	proxy.ModifyResponse = func(resp *http.Response) error {
 		g.Log().Debug(ctx, "ModifyResponse", r.Request.URL.Path)

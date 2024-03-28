@@ -247,6 +247,7 @@ func Conversation(r *ghttp.Request) {
 	// 重设body内容
 	r.Request.Body = io.NopCloser(bytes.NewReader(gconv.Bytes(body)))
 	AccessToken := carinfo.AccessToken
+
 	u, _ := url.Parse(config.CHATPROXY)
 	proxy := httputil.NewSingleHostReverseProxy(u)
 	proxy.ErrorHandler = func(writer http.ResponseWriter, request *http.Request, e error) {
@@ -288,5 +289,19 @@ func Conversation(r *ghttp.Request) {
 	// g.Dump(newreq.Header)
 	newreq.Header.Set("authkey", config.AUTHKEY)
 	newreq.Header.Set("Authorization", "Bearer "+AccessToken)
+	// 检查跨车验证是否相符
+	requirementsCarid := r.Session.MustGet("requirements-carid").String()
+	if requirementsCarid != carid {
+		// 移除OpenAI-Sentinel-Chat-Requirements-Token 改由接入点补全
+		g.Log().Debug(ctx, "requirements-carid:", requirementsCarid, "carid:", carid, "not match,remove OpenAI-Sentinel-Chat-Requirements-Token")
+		newreq.Header.Del("OpenAI-Sentinel-Chat-Requirements-Token")
+		r.Response.Status = 418
+		// 提示需要验证
+		r.Response.WriteJson(g.Map{
+			"code":   "challenge_required",
+			"detail": "跨车会话要求验证,请点击重新生成完成验证 \n Cross-car conversation requires verification, please click to regenerate to complete the verification",
+		})
+		return
+	}
 	proxy.ServeHTTP(r.Response.Writer.RawWriter(), newreq)
 }

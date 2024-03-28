@@ -40,7 +40,7 @@ func Session(r *ghttp.Request) {
 		return
 	}
 
-	getsessionUrl := config.CHATPROXY + "/getsession"
+	getsessionUrl := config.CHATPROXY + "/refreshsession"
 	getsessionVar := g.Client().PostVar(ctx, getsessionUrl, g.MapStrStr{
 		"refreshCookie": carinfo.RefreshCookie,
 		"authkey":       config.AUTHKEY,
