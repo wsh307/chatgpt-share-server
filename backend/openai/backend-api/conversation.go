@@ -213,17 +213,19 @@ func Conversation(r *ghttp.Request) {
 		return
 	}
 	utility.GetStatsInstance(carid).RecordCall()
+	ChatGPTAccountID := r.Header.Get("ChatGPT-Account-ID")
 
 	// 如果配置了限制url
 	if config.AuditLimitUrl != "" {
 
 		res, err := g.Client().SetHeaderMap(g.MapStrStr{
-			"Authorization": "Bearer " + usertoken,
-			"Content-Type":  "application/json",
-			"Cookie":        r.Header.Get("Cookie"),
-			"Referer":       r.Header.Get("Referer"),
-			"User-Agent":    r.Header.Get("User-Agent"),
-			"Carid":         carid,
+			"Authorization":      "Bearer " + usertoken,
+			"ChatGPT-Account-ID": ChatGPTAccountID,
+			"Content-Type":       "application/json",
+			"Cookie":             r.Header.Get("Cookie"),
+			"Referer":            r.Header.Get("Referer"),
+			"User-Agent":         r.Header.Get("User-Agent"),
+			"Carid":              carid,
 		}).Post(ctx, config.AuditLimitUrl, body)
 		if err != nil {
 			r.Response.Status = 400
@@ -241,7 +243,6 @@ func Conversation(r *ghttp.Request) {
 
 	}
 	// model:=body.Get("model").String()
-	ChatGPTAccountID := r.Header.Get("ChatGPT-Account-ID")
 	// 重设body大小
 	r.ContentLength = int64(len(gconv.Bytes(body)))
 	// 重设body内容
