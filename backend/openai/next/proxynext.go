@@ -12,6 +12,7 @@ import (
 	"github.com/gogf/gf/v2/encoding/gjson"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/net/ghttp"
+	"github.com/gogf/gf/v2/text/gstr"
 	"github.com/gogf/gf/v2/util/gconv"
 )
 
@@ -51,6 +52,10 @@ func ProxyNext(r *ghttp.Request) {
 		bodyJson.Set("pageProps.user.image", "/avatars.png")
 		bodyJson.Set("pageProps.user.picture", "/avatars.png")
 		bodyJson.Set("pageProps.user.id", "user-xadmin")
+		bodyStr := bodyJson.String()
+		// 替换 body 中的邮件
+		bodyStr = gstr.Replace(bodyStr, carinfo.Email, "share@closeai.biz", -1)
+		bodyJson = gjson.New(bodyStr)
 
 		// 写入响应体
 		response.Body = io.NopCloser(bytes.NewReader(gconv.Bytes(bodyJson)))
