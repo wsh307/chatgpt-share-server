@@ -30,6 +30,7 @@ func init() {
 	backendApiGroup.ALL("/payments/checkout", Error404)          // 支付
 	backendApiGroup.ALL("/accounts/*/invites", Error404)         // 邀请
 	backendApiGroup.ALL("/accounts/*/users/*", Error404)         // 成员
+	backendApiGroup.ALL("/accounts/transfer", Error404)          // 转移
 }
 
 func Error404(r *ghttp.Request) {
