@@ -14,6 +14,10 @@ func NewChatgptUserService() *ChatgptUserService {
 	return &ChatgptUserService{
 		&cool.Service{
 			Model: model.NewChatgptUser(),
+			PageQueryOp: &cool.QueryOp{
+				FieldEQ:      []string{"usertoken"},
+				KeyWordField: []string{"usertoken"},
+			},
 		},
 	}
 }
