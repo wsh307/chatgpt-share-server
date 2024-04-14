@@ -34,6 +34,13 @@ func Login(r *ghttp.Request) {
 
 			return
 		}
+		usertoken := r.Session.MustGet("usertoken").String()
+		if usertoken != "" {
+			r.Session.Set("carid", carid)
+			r.Response.RedirectTo("/")
+			return
+		}
+
 		var badgeSVG []byte
 
 		count := utility.GetStatsInstance(carid).GetCallCount()

@@ -17,6 +17,8 @@ var (
 		Brief: "start http server",
 		Func: func(ctx context.Context, parser *gcmd.Parser) (err error) {
 			s := g.Server()
+			// 设置最大上传文件大小
+			s.SetClientMaxBodySize(100 * 1024 * 1024)
 			if cool.IsRedisMode {
 				go cool.ListenFunc(ctx)
 				redisConfig := &gredis.Config{}
