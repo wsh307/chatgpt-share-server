@@ -17,9 +17,12 @@ func init() {
 	backendApiGroup.GET("/files/:fileid/download", ProxyBackendWithCar)      // 文件下载
 	backendApiGroup.POST("/files/:fileid/uploaded", ProxyBackendWithCar)     // 文件上传
 	backendApiGroup.POST("/sentinel/chat-requirements", ProxyBackendWithCar) // 聊天需求
-	backendApiGroup.POST("/files", ProxyBackendWithCar)                      // 文件上传
-	backendApiGroup.PATCH("/conversation/:id", ConversationPATCH)            // 修改会话 删除会话
-	backendApiGroup.PATCH("/conversations", Conversations)                   // 清空会话列表
+	backendApiGroup.GET("/synthesize", ProxyBackendWithCar)                  // 合成
+	backendApiGroup.POST("/share/create", ProxyBackendWithCar)               // 创建共享
+
+	backendApiGroup.POST("/files", ProxyBackendWithCar)           // 文件上传
+	backendApiGroup.PATCH("/conversation/:id", ConversationPATCH) // 修改会话 删除会话
+	backendApiGroup.PATCH("/conversations", Conversations)        // 清空会话列表
 
 	// 禁止访问的路径
 	backendApiGroup.ALL("/payments/customer_portal", Error404)   // 支付

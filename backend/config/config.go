@@ -17,11 +17,10 @@ var (
 	CHATPROXY    = "https://demo.xyhelper.cn"
 	AUTHKEY      = "xyhelper"
 	ArkoseUrl    = "/v2/"
-	BuildId      = "CdVKBysnaJNkqh_-wcfYZ"
-	CacheBuildId = "CdVKBysnaJNkqh_-wcfYZ"
+	BuildId      = "4DtybnrborNWeufDD8H-a"
+	CacheBuildId = "4DtybnrborNWeufDD8H-a"
 	AssetPrefix  = "https://oaistatic-cdn.closeai.biz"
-	PK40         = "35536E1E-65B4-4D96-9D97-6ADB7EFF8147"
-	PK35         = "3D86FBBA-9D22-402A-B512-3420086BA6CC"
+
 	envScriptTpl = `
 	<script src="/jquery.min.js"></script>
 	<script src="/list.js"></script>
@@ -29,8 +28,6 @@ var (
 	<script>
 	window.__arkoseUrl="{{.ArkoseUrl}}";
 	window.__assetPrefix="{{.AssetPrefix}}";
-	window.__PK40="{{.PK40}}";
-	window.__PK35="{{.PK35}}";
 	</script>
 	`
 	OauthUrl      = ""
@@ -133,8 +130,6 @@ func GetEnvScript(ctx g.Ctx) string {
 	script, err := gview.ParseContent(ctx, envScriptTpl, g.Map{
 		"ArkoseUrl":   ArkoseUrl,
 		"AssetPrefix": AssetPrefix,
-		"PK40":        PK40,
-		"PK35":        PK35,
 	})
 	if err != nil {
 		g.Log().Error(ctx, "GetEnvScript Error: ", err)
