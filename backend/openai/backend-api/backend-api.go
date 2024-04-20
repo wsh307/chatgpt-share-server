@@ -34,6 +34,7 @@ func init() {
 	backendApiGroup.ALL("/accounts/*/invites", Error404)         // 邀请
 	backendApiGroup.ALL("/accounts/*/users/*", Error404)         // 成员
 	backendApiGroup.ALL("/accounts/transfer", Error404)          // 转移
+	backendApiGroup.ALL("/accounts/logout_all", Error404)        // 登出
 }
 
 func Error404(r *ghttp.Request) {
