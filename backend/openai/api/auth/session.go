@@ -46,15 +46,15 @@ func Session(r *ghttp.Request) {
 		"authkey":       config.AUTHKEY,
 	})
 	sessionJson := gjson.New(getsessionVar)
+	sessionJson.Dump()
+
 	detail := sessionJson.Get("detail").String()
-	if gstr.Contains(detail, "Your authentication token has expired. Please try signing in again.") {
+	if gstr.Contains(detail, "RefreshAccessTokenError") {
 		utility.CloseCar(ctx, carid)
 		r.Response.Status = 401
 		r.Response.WriteJson(gjson.New(errSessionStr))
 		return
-
 	}
-	// sessionJson.Dump()
 	email := sessionJson.Get("user.email").String()
 	if email == "" {
 		// 先使用缓存中的session
