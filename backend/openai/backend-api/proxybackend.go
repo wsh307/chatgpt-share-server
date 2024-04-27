@@ -77,7 +77,6 @@ func ProxyBackendWithCar(r *ghttp.Request) {
 		}).Cache(gdb.CacheOption{
 			Duration: time.Hour,
 			Name:     conv,
-			Force:    true,
 		}).One()
 		if err != nil {
 			g.Log().Error(ctx, err)
@@ -88,6 +87,7 @@ func ProxyBackendWithCar(r *ghttp.Request) {
 			return
 		}
 		if result != nil {
+			// g.Dump(result)
 			email := result["email"].String()
 			caridVar, err := g.Redis("cool").Get(ctx, "email:"+email)
 			if err != nil {

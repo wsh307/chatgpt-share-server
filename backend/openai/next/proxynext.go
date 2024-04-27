@@ -40,7 +40,9 @@ func ProxyNext(r *ghttp.Request) {
 		if response.StatusCode != 200 {
 			return nil
 		}
-		// 读取响应体
+		if response.Header.Get("Content-Type") != "application/json" {
+			return nil
+		}
 		body, err := io.ReadAll(response.Body)
 		if err != nil {
 			return err

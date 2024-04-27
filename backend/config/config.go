@@ -17,8 +17,8 @@ var (
 	CHATPROXY    = "https://demo.xyhelper.cn"
 	AUTHKEY      = "xyhelper"
 	ArkoseUrl    = "/v2/"
-	BuildId      = "4DtybnrborNWeufDD8H-a"
-	CacheBuildId = "4DtybnrborNWeufDD8H-a"
+	BuildId      = "X6JxF6CD_n9WQ2UneVKjj"
+	CacheBuildId = "X6JxF6CD_n9WQ2UneVKjj"
 	AssetPrefix  = "https://oaistatic-cdn.closeai.biz"
 
 	envScriptTpl = `
