@@ -30,12 +30,12 @@ var (
 	window.__assetPrefix="{{.AssetPrefix}}";
 	</script>
 	`
-	OauthUrl      = ""
-	AuditLimitUrl = ""
-	APIAUTH       = ""
-	DISALLOW_ROAM = false // 是否禁止漫游
-	FILESERVER    = ""
-
+	OauthUrl              = ""
+	AuditLimitUrl         = ""
+	APIAUTH               = ""
+	DISALLOW_ROAM         = false // 是否禁止漫游
+	FILESERVER            = ""
+	ConversationNotifyUrl = ""
 	// Generator *badge.Generator
 )
 
@@ -95,6 +95,11 @@ func init() {
 		AuditLimitUrl = auditLimitUrl
 	}
 	g.Log().Info(ctx, "AUDIT_LIMIT_URL:", AuditLimitUrl)
+	conversationNotifyUrl := g.Cfg().MustGetWithEnv(ctx, "ConversationNotifyUrl").String()
+	if conversationNotifyUrl != "" {
+		ConversationNotifyUrl = conversationNotifyUrl
+	}
+	g.Log().Info(ctx, "ConversationNotifyUrl:", ConversationNotifyUrl)
 	apiAuth := g.Cfg().MustGetWithEnv(ctx, "APIAUTH").String()
 	if apiAuth != "" {
 		APIAUTH = apiAuth

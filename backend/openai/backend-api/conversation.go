@@ -212,7 +212,6 @@ func Conversation(r *ghttp.Request) {
 		})
 		return
 	}
-	utility.GetStatsInstance(carid).RecordCall()
 	ChatGPTAccountID := r.Header.Get("ChatGPT-Account-ID")
 
 	// 如果配置了限制url
@@ -278,7 +277,25 @@ func Conversation(r *ghttp.Request) {
 			r.Response.Status = 429
 			r.Response.Write(body)
 		}
-
+		//响应成功才计数
+		if proxyResponse.StatusCode == 200 {
+			utility.GetStatsInstance(carid).RecordCall()
+			// 如果配置了对话回调url
+			if config.ConversationNotifyUrl != "" {
+				go func() {
+					res, _ := g.Client().SetHeaderMap(g.MapStrStr{
+						"Authorization":      "Bearer " + usertoken,
+						"ChatGPT-Account-ID": ChatGPTAccountID,
+						"Content-Type":       "application/json",
+						"Cookie":             r.Header.Get("Cookie"),
+						"Referer":            r.Header.Get("Referer"),
+						"User-Agent":         r.Header.Get("User-Agent"),
+						"Carid":              carid,
+					}).Post(ctx, config.ConversationNotifyUrl, nil)
+					defer res.Close()
+				}()
+			}
+		}
 		proxyResponse.Header.Del("Set-Cookie")
 
 		return nil
