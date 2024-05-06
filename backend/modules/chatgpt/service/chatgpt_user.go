@@ -4,6 +4,7 @@ import (
 	"backend/modules/chatgpt/model"
 
 	"github.com/cool-team-official/cool-admin-go/cool"
+	"github.com/gogf/gf/v2/frame/g"
 
 	"strings"
 

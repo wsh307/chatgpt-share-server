@@ -1,6 +1,7 @@
 package arkose
 
 import (
+	"backend/config"
 	"backend/utility"
 	"net/http/httputil"
 	"net/url"
@@ -10,7 +11,7 @@ import (
 )
 
 var (
-	UpStream = "https://tcr9i.closeai.biz"
+	UpStream = config.CHATPROXY
 	proxy    *httputil.ReverseProxy
 	Remote   *url.URL
 )
