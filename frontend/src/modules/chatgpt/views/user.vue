@@ -100,6 +100,18 @@ const Upsert = useUpsert({
 			}
 		},
 		{
+			label: "批量（个）",
+			prop: "batch",
+			component: {
+				name: "el-input-number",
+				props: {
+					min: 0,
+					max: 100
+				}
+			}
+			// required: true
+		},
+		{
 			label: "备注",
 			prop: "remark",
 			component: { name: "el-input", props: { type: "textarea", rows: 4 } }
