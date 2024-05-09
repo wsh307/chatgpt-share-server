@@ -291,6 +291,7 @@ func Conversation(r *ghttp.Request) {
 						"Referer":            r.Header.Get("Referer"),
 						"User-Agent":         r.Header.Get("User-Agent"),
 						"Carid":              carid,
+						"Model":              body.Get("model").String(),
 					}).Post(ctx, config.ConversationNotifyUrl, nil)
 					defer res.Close()
 				}()
