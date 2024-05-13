@@ -13,14 +13,16 @@ import (
 )
 
 var (
-	PORT         = 8001
-	CHATPROXY    = "https://demo.xyhelper.cn"
-	AUTHKEY      = "xyhelper"
-	ArkoseUrl    = "/v2/"
-	BuildId      = "2E3kyHMTDQPAokpbyfwns"
-	CacheBuildId = "2E3kyHMTDQPAokpbyfwns"
-	AssetPrefix  = "https://oaistatic-cdn.closeai.biz"
+	PORT      = 8001
+	CHATPROXY = "https://demo.xyhelper.cn"
+	AUTHKEY   = "xyhelper"
+	ArkoseUrl = "/v2/"
 
+	AssetPrefix  = "https://oaistatic-cdn.closeai.biz"
+	BuildId      = "Xhs7HSGBjb9hZenQPhykC"
+	CacheBuildId = "Xhs7HSGBjb9hZenQPhykC"
+	Script       = "https://cdn.oaistatic.com/_next/static/chunks/2565-263427db2ed7a61a.js?dpl=37f91bfd782f6b4fb81dd5cd885a42d5d31cc4a3"
+	Dpl          = "dpl=37f91bfd782f6b4fb81dd5cd885a42d5d31cc4a3"
 	envScriptTpl = `
 	<script src="/jquery.min.js"></script>
 	<script src="/list.js"></script>
@@ -28,6 +30,8 @@ var (
 	<script>
 	window.__arkoseUrl="{{.ArkoseUrl}}";
 	window.__assetPrefix="{{.AssetPrefix}}";
+	window.__script="{{.Script}}";
+	window.__dpl="{{.Dpl}}";
 	</script>
 	`
 	OauthUrl              = ""
@@ -65,11 +69,17 @@ func init() {
 		CacheBuildId = cacheBuildId
 	}
 	g.Log().Info(ctx, "CacheBuildId:", CacheBuildId)
-	build := CheckNewVersion(ctx)
+	build, script, dpl := CheckNewVersion(ctx)
 	if build != "" {
 		BuildId = build
 	}
-	g.Log().Info(ctx, "BuildId:", BuildId)
+	if script != "" {
+		Script = script
+	}
+	if dpl != "" {
+		Dpl = dpl
+	}
+	g.Log().Info(ctx, "BuildId:", BuildId, "Script:", Script, "Dpl:", Dpl)
 	port := g.Cfg().MustGetWithEnv(ctx, "PORT").Int()
 	if port != 0 {
 		PORT = port
@@ -114,11 +124,17 @@ func init() {
 	// 每10分钟检查一次版本
 	go func() {
 		for {
-			build := CheckNewVersion(ctx)
+			build, script, dpl := CheckNewVersion(ctx)
 			if build != "" {
 				BuildId = build
 			}
-			g.Log().Info(ctx, "BuildId:", BuildId)
+			if script != "" {
+				Script = script
+			}
+			if dpl != "" {
+				Dpl = dpl
+			}
+			g.Log().Info(ctx, "BuildId:", BuildId, "Script:", Script, "Dpl:", Dpl)
 			cacheBuildId := CheckVersion(ctx, AssetPrefix)
 			if cacheBuildId != "" {
 				CacheBuildId = cacheBuildId
@@ -135,6 +151,8 @@ func GetEnvScript(ctx g.Ctx) string {
 	script, err := gview.ParseContent(ctx, envScriptTpl, g.Map{
 		"ArkoseUrl":   ArkoseUrl,
 		"AssetPrefix": AssetPrefix,
+		"Script":      Script,
+		"Dpl":         Dpl,
 	})
 	if err != nil {
 		g.Log().Error(ctx, "GetEnvScript Error: ", err)
@@ -144,11 +162,15 @@ func GetEnvScript(ctx g.Ctx) string {
 }
 
 // 检查是否有新版本
-func CheckNewVersion(ctx g.Ctx) (buildId string) {
-	resVar := g.Client().GetVar(ctx, CHATPROXY+"/ping")
-	resJson := gjson.New(resVar)
-
-	buildId = resJson.Get("buildId").String()
+func CheckNewVersion(ctx g.Ctx) (buildId, script, dpl string) {
+	// 读取 https://tcr9i-dev.closeai.biz/ping
+	respVar := g.Client().GetVar(ctx, "https://publicapi.closeai.biz/chatgpt/info")
+	respJson := gjson.New(respVar)
+	respJson.Dump()
+	buildId = gjson.New(respVar).Get("buildId").String()
+	script = gjson.New(respVar).Get("script").String()
+	dpl = gjson.New(respVar).Get("dpl").String()
+	g.Log().Info(ctx, "Check tcr9i buildId: ", buildId)
 	return
 }
 

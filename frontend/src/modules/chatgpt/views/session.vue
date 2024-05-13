@@ -91,19 +91,34 @@ const Upsert = useUpsert({
 		if (!data.sort) {
 			data.sort = 0;
 		}
-		localStorage.removeItem("arkoseToken");
-		window.myEnforcement.run();
+		if (!data.officialSession) {
+			localStorage.removeItem("arkoseToken");
+			window.myEnforcement.run();
+		}
 	},
 	onSubmit(data, { done, close, next }) {
 		// 自动生成uuid 作为userToken
 		let arkoseToken = localStorage.getItem("arkoseToken");
 		if (arkoseToken) {
+			localStorage.removeItem("arkoseToken");
+
 			next({ ...data, arkoseToken });
 			done();
 			close();
 		} else {
-			alert("请刷新页面，重新验证");
-			done();
+			if (!data.officialSession) {
+				window.myEnforcement.run();
+				ElMessage({
+					message: "请稍等,人机验证进行中,验证完成后请重新点击确定保存.",
+					type: "warning"
+				});
+				// alert("请先完成人机验证");
+
+				done();
+			} else {
+				done();
+				close();
+			}
 		}
 	}
 });
@@ -161,6 +176,9 @@ export default defineComponent({
 				type: "success"
 			});
 			localStorage.setItem("arkoseToken", token);
+			// 设置过期时间 tokenExpire 为4分钟
+			// let tokenExpire = now.getTime() + 4 * 60 * 1000;
+			// localStorage.setItem("tokenExpire", tokenExpire);
 
 			this.arkoseToken = token;
 			// router.replace({ path: "/dashboard" });
