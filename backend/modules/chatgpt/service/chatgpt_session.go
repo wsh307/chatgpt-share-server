@@ -76,6 +76,7 @@ func (s *ChatgptSessionService) ModifyAfter(ctx g.Ctx, method string, param map[
 		"refreshCookie": refreshCookie,
 	})
 	sessionJson := gjson.New(sessionVar)
+	sessionJson.Dump()
 	if sessionJson.Get("accessToken").String() == "" {
 		g.Log().Error(ctx, "ChatgptSessionService.ModifyAfter", "get session error", sessionJson)
 		detail := sessionJson.Get("detail").String()

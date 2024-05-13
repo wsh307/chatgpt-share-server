@@ -91,14 +91,16 @@ const Upsert = useUpsert({
 		if (!data.sort) {
 			data.sort = 0;
 		}
+		localStorage.removeItem("arkoseToken");
+
 		if (!data.officialSession) {
-			localStorage.removeItem("arkoseToken");
 			window.myEnforcement.run();
 		}
 	},
 	onSubmit(data, { done, close, next }) {
 		// 自动生成uuid 作为userToken
 		let arkoseToken = localStorage.getItem("arkoseToken");
+		let w = window;
 		if (arkoseToken) {
 			localStorage.removeItem("arkoseToken");
 
@@ -107,7 +109,7 @@ const Upsert = useUpsert({
 			close();
 		} else {
 			if (!data.officialSession) {
-				window.myEnforcement.run();
+				w.myEnforcement.run();
 				ElMessage({
 					message: "请稍等,人机验证进行中,验证完成后请重新点击确定保存.",
 					type: "warning"
@@ -116,6 +118,7 @@ const Upsert = useUpsert({
 
 				done();
 			} else {
+				next(data);
 				done();
 				close();
 			}
