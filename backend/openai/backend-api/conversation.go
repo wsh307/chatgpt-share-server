@@ -311,16 +311,17 @@ func Conversation(r *ghttp.Request) {
 	// 检查跨车验证是否相符
 	requirementsCarid := r.Session.MustGet("requirements-carid").String()
 	if requirementsCarid != carid {
-		// 移除OpenAI-Sentinel-Chat-Requirements-Token 改由接入点补全
-		g.Log().Debug(ctx, "requirements-carid:", requirementsCarid, "carid:", carid, "not match,remove OpenAI-Sentinel-Chat-Requirements-Token")
-		newreq.Header.Del("OpenAI-Sentinel-Chat-Requirements-Token")
-		r.Response.Status = 418
-		// 提示需要验证
-		r.Response.WriteJson(g.Map{
-			"code":   "challenge_required",
-			"detail": "跨车会话要求验证,请点击重新生成完成验证 \n Cross-car conversation requires verification, please click to regenerate to complete the verification",
-		})
-		return
+		// // 移除OpenAI-Sentinel-Chat-Requirements-Token 改由接入点补全
+		// g.Log().Debug(ctx, "requirements-carid:", requirementsCarid, "carid:", carid, "not match,remove OpenAI-Sentinel-Chat-Requirements-Token")
+		// newreq.Header.Del("OpenAI-Sentinel-Chat-Requirements-Token")
+		// r.Response.Status = 418
+		// // 提示需要验证
+		// r.Response.WriteJson(g.Map{
+		// 	"code":   "challenge_required",
+		// 	"detail": "跨车会话要求验证,请点击重新生成完成验证 \n Cross-car conversation requires verification, please click to regenerate to complete the verification",
+		// })
+		// return
+		newreq.Header.Del("OpenAISentinelProofToken")
 	}
 	proxy.ServeHTTP(r.Response.Writer.RawWriter(), newreq)
 }
