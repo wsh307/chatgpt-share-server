@@ -15,6 +15,7 @@ type CarInfo struct {
 	RefreshCookie string
 	AccessToken   string
 	Password      string
+	PlanType      string
 }
 
 func CheckCar(ctx g.Ctx, carid string) (carInfo *CarInfo, err error) {
@@ -53,11 +54,15 @@ func CheckCar(ctx g.Ctx, carid string) (carInfo *CarInfo, err error) {
 	}
 	carInfo.AccessToken = accessToken
 	models := sessionJson.Get("models").Array()
-	if len(models) == 0 {
-		err = gerror.New("models is empty")
-		return
+	isPlus := len(models) > 1
+	plan_type := sessionJson.Get("accountCheckInfo.plan_type").String()
+	if plan_type != "" {
+		carInfo.PlanType = plan_type
 	}
-	carInfo.IsPlus = len(models) > 1
+	if plan_type == "free" {
+		isPlus = false
+	}
+	carInfo.IsPlus = isPlus
 	if carInfo.IsPlus {
 		carInfo.IsPlusStr = "PLUS"
 	} else {

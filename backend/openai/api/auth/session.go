@@ -80,10 +80,15 @@ func Session(r *ghttp.Request) {
 		return
 	}
 	models := sessionJson.Get("models").Array()
+	isPlus := len(models) > 1
+	plan_type := sessionJson.Get("accountCheckInfo.plan_type").String()
+	if plan_type == "free" {
+		isPlus = false
+	}
 	// 更新账号信息
 	cool.DBM(model.NewChatgptSession()).Where("email=?", email).Update(g.Map{
 		"officialSession": sessionJson.String(),
-		"isPlus":          len(models) > 1,
+		"isPlus":          isPlus,
 		"status":          1,
 	})
 	// 更新缓存

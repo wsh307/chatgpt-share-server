@@ -18,6 +18,19 @@ import (
 	"github.com/gogf/gf/v2/text/gstr"
 )
 
+var (
+	backendProxy *httputil.ReverseProxy
+)
+
+func init() {
+	u, _ := url.Parse(config.CHATPROXY)
+
+	backendProxy = httputil.NewSingleHostReverseProxy(u)
+	backendProxy.ErrorHandler = func(writer http.ResponseWriter, request *http.Request, e error) {
+		writer.WriteHeader(http.StatusBadGateway)
+	}
+}
+
 func ProxyBackend(r *ghttp.Request) {
 	ctx := r.GetCtx()
 	// usertoken := r.Session.MustGet("usertoken").String()
@@ -39,19 +52,19 @@ func ProxyBackend(r *ghttp.Request) {
 	}
 
 	u, _ := url.Parse(config.CHATPROXY)
-	proxy := httputil.NewSingleHostReverseProxy(u)
-	proxy.ErrorHandler = func(writer http.ResponseWriter, request *http.Request, e error) {
-		g.Log().Error(ctx, e)
-		writer.WriteHeader(http.StatusBadGateway)
-	}
 	newreq := r.Request.Clone(ctx)
 	newreq.URL.Host = u.Host
 	newreq.URL.Scheme = u.Scheme
 	newreq.Host = u.Host
 	// g.Dump(newreq.Header)
-	newreq.Header.Set("authkey", config.AUTHKEY)
+	// newreq.Header.Set("authkey", config.AUTHKEY)
+	// g.Log().Debug(ctx, "ProxyBackend", newreq.URL.Path, newreq.URL.RawQuery)
+	// 设置记忆只能关不能开
+	if newreq.URL.Path == "/backend-api/settings/account_user_setting" && newreq.URL.RawQuery == "feature=sunshine&value=true" {
+		newreq.URL.RawQuery = "feature=sunshine&value=false"
+	}
 
-	proxy.ServeHTTP(r.Response.Writer.RawWriter(), newreq)
+	backendProxy.ServeHTTP(r.Response.Writer.RawWriter(), newreq)
 }
 func ProxyBackendWithCar(r *ghttp.Request) {
 	ctx := r.GetCtx()

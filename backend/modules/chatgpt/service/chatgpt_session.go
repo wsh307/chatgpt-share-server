@@ -93,10 +93,16 @@ func (s *ChatgptSessionService) ModifyAfter(ctx g.Ctx, method string, param map[
 	}
 	email := sessionJson.Get("user.email").String()
 	models := sessionJson.Get("models").Array()
+	isPlus := len(models) > 1
+	plan_type := sessionJson.Get("accountCheckInfo.plan_type").String()
+	if plan_type == "free" {
+		isPlus = false
+	}
+
 	_, err = cool.DBM(s.Model).Where("carid=?", param["carID"]).Update(g.Map{
 		"email":           email,
 		"officialSession": sessionJson.String(),
-		"isPlus":          len(models) > 1,
+		"isPlus":          isPlus,
 		"status":          1,
 	})
 	if err != nil {

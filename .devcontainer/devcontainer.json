@@ -28,5 +28,8 @@
     "TZ": "Asia/Shanghai"
   },
   "postCreateCommand": "make init",
-  "remoteUser": "root"
+  "remoteUser": "root",
+  "features": {
+    "ghcr.io/devcontainers-contrib/features/cloudflared:1": {}
+  }
 }
