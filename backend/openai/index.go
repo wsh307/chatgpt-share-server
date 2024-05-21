@@ -166,11 +166,13 @@ func G(r *ghttp.Request) {
 	}
 	gizmoId := r.GetRouter("gizmoId").String()
 
-	propsJson := gjson.New(PropsG)
+	propsJson := gjson.New(Props)
 	propsJson.Set("query.gizmoId", gizmoId)
 	propsJson.Set("buildId", config.BuildId)
 	propsJson.Set("assetPrefix", config.AssetPrefix)
 	propsJson.Set("page", "/g/[gizmoId]")
+	propsJson.Set("props.pageProps.gizmo", g.Map{})
+	propsJson.Set("props.pageProps.kind", "chat_page")
 
 	r.Response.WriteTpl(config.CacheBuildId+"/g.html", g.Map{
 		"arkoseUrl":   config.ArkoseUrl,
