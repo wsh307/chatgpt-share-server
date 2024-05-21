@@ -69,4 +69,5 @@ DISALLOW_ROAM: false
 # 对话响应成功回调地址
 # ConversationNotifyUrl: ""
 # 文件服务器
-FILE_SERVER: "https://files.oaiusercontent.com"
+# FILESERVER: "https://files.oaiusercontent.com"
+ASSET_PREFIX: https://oaistatic-cdn2.closeai.biz

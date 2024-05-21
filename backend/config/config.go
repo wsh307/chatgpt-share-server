@@ -19,8 +19,8 @@ var (
 	ArkoseUrl = "/v2/"
 
 	AssetPrefix  = "https://oaistatic-cdn.closeai.biz"
-	BuildId      = "Xhs7HSGBjb9hZenQPhykC"
-	CacheBuildId = "Xhs7HSGBjb9hZenQPhykC"
+	BuildId      = "-wRE4Obkm_QOW7PLn1x21"
+	CacheBuildId = "-wRE4Obkm_QOW7PLn1x21"
 	Script       = "https://cdn.oaistatic.com/_next/static/chunks/2565-263427db2ed7a61a.js?dpl=37f91bfd782f6b4fb81dd5cd885a42d5d31cc4a3"
 	Dpl          = "dpl=37f91bfd782f6b4fb81dd5cd885a42d5d31cc4a3"
 	envScriptTpl = `
@@ -38,7 +38,7 @@ var (
 	AuditLimitUrl         = ""
 	APIAUTH               = ""
 	DISALLOW_ROAM         = false // 是否禁止漫游
-	FILESERVER            = ""
+	FILESERVER            = "https://files.closeai.biz"
 	ConversationNotifyUrl = ""
 	// Generator *badge.Generator
 )
