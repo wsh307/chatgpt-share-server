@@ -13,6 +13,8 @@ import (
 	_ "backend/modules"
 	_ "backend/openai"
 
+	"backend/ab"
+
 	"github.com/gogf/gf/v2/os/gctx"
 
 	"backend/internal/cmd"
@@ -20,5 +22,7 @@ import (
 
 func main() {
 	// gres.Dump()
+	ctx := gctx.New()
+	ab.Init(ctx)
 	cmd.Main.Run(gctx.New())
 }
