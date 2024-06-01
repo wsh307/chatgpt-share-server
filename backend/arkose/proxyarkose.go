@@ -2,6 +2,7 @@ package arkose
 
 import (
 	"backend/config"
+	"backend/ratelimit"
 	"backend/utility"
 	"net/http/httputil"
 	"net/url"
@@ -11,9 +12,10 @@ import (
 )
 
 var (
-	UpStream = config.CHATPROXY
-	proxy    *httputil.ReverseProxy
-	Remote   *url.URL
+	UpStream    = config.CHATPROXY
+	proxy       *httputil.ReverseProxy
+	Remote      *url.URL
+	arkoselimit = ratelimit.NewRateLimiter(1, 10)
 )
 
 func init() {
@@ -28,7 +30,25 @@ func ProxyArkose(r *ghttp.Request) {
 	// g.Log().Info(ctx, "ProxyArkose", path)
 	isAdmin := r.Session.MustGet("isAdmin").Bool()
 	if !isAdmin {
+		usertoken := r.Session.MustGet("usertoken").String()
+		if usertoken == "" {
+			g.Log().Error(ctx, "usertoken is empty")
+			r.Response.Status = 401
+			r.Response.WriteJson(g.Map{
+				"detail": "Authentication credentials were not provided.",
+			})
+			return
+		}
+		if path == "/fc/gt2/public_key/35536E1E-65B4-4D96-9D97-6ADB7EFF8147" && !arkoselimit.Allow(usertoken) {
+			r.Response.Status = 429
+			r.Response.WriteJson(g.Map{
+				"detail": "Too Many Requests",
+			})
+			return
+		}
+
 		carid := r.Session.MustGet("carid").String()
+
 		_, err := utility.CheckCar(ctx, carid)
 		if err != nil {
 			g.Log().Error(ctx, err)

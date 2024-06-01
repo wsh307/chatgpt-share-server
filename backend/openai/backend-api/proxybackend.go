@@ -3,6 +3,7 @@ package backendapi
 import (
 	"backend/config"
 	"backend/modules/chatgpt/model"
+	"backend/ratelimit"
 	"backend/utility"
 	"io"
 	"net/http"
@@ -20,6 +21,8 @@ import (
 
 var (
 	backendProxy *httputil.ReverseProxy
+	// userlimit           = ratelimit.NewRateLimiter(10, 10)
+	chatrequirmentLimit = ratelimit.NewRateLimiter(2, 10)
 )
 
 func init() {
@@ -68,7 +71,14 @@ func ProxyBackend(r *ghttp.Request) {
 }
 func ProxyBackendWithCar(r *ghttp.Request) {
 	ctx := r.GetCtx()
-	// usertoken := r.Session.MustGet("usertoken").String()
+	usertoken := r.Session.MustGet("usertoken").String()
+	if r.Request.URL.Path == "/backend-api/conversation" && !chatrequirmentLimit.Allow(usertoken) {
+		r.Response.Status = 429
+		r.Response.WriteJson(g.Map{
+			"detail": "Too Many Requests",
+		})
+		return
+	}
 	carid := r.Session.MustGet("carid").String()
 	conv := r.GetRouter("convid").String()
 

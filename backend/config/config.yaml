@@ -70,4 +70,4 @@ DISALLOW_ROAM: false
 # ConversationNotifyUrl: ""
 # 文件服务器
 # FILESERVER: "https://files.oaiusercontent.com"
-ASSET_PREFIX: https://oaistatic-cdn2.closeai.biz
+ASSET_PREFIX: https://oaistatic-cdn.closeai.biz
